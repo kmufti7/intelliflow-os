@@ -60,6 +60,15 @@ A modular AI platform demonstrating enterprise patterns: audit trails, policy-gr
 
 ---
 
+## Demo Videos
+
+| Module | Description | Demo |
+|--------|-------------|------|
+| SupportFlow | Multi-agent routing, policy citations, chaos mode | [Watch Demo](https://youtu.be/7B6mBKlNL5k) |
+| CareFlow | Regex-first extraction, deterministic reasoning, PHI-aware | [Watch Demo](https://youtu.be/Ct9z91649kg) |
+
+---
+
 ## Module Overview
 
 | Module | Domain | Key Feature | Tests | Repo |
