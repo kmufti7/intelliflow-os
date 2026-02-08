@@ -7,7 +7,7 @@
 
 ## Project Structure
 - 4 repos: intelliflow-os (overview), intelliflow-core (SDK), intelliflow-supportflow, intelliflow-careflow
-- 111 total tests (32 core + 13 SupportFlow + 66 CareFlow)
+- 129 total tests (32 core + 13 SupportFlow + 84 CareFlow)
 - Private artifacts in `portfolio_writeup/` (01-10 + PRIVATE_CHANGELOG.md) and `linkedin_experience.md`
 - CLAUDE.md in repo root governs private artifact handling
 
@@ -20,7 +20,7 @@
 - linkedin_experience.md: LinkedIn experience entry
 
 ## Public Enterprise Docs (pushed)
-- DOCS_INDEX.md, ARCHITECTURE.md (Mermaid), SECURITY.md (OWASP LLM Top 10), GOVERNANCE.md (NIST AI RMF + EU AI Act), COST_MODEL.md, TEST_STRATEGY.md, CHANGELOG.md, CLAUDE.md
+- 12 docs: DOCS_INDEX.md, ARCHITECTURE.md (Mermaid), SECURITY.md (OWASP LLM Top 10), GOVERNANCE.md (NIST AI RMF + EU AI Act), COST_MODEL.md, TEST_STRATEGY.md, CHANGELOG.md, CLAUDE.md, DATA_DICTIONARY.md, OBSERVABILITY.md, VENDOR_COMPARISON.md, ETHICS.md
 
 ---
 

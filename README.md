@@ -18,9 +18,9 @@ A modular AI platform demonstrating enterprise patterns: audit trails, policy-gr
 │  • Multi-agent routing     │  • Regex-first extraction         │
 │  • Policy citations        │  • Deterministic gap reasoning    │
 │  • Chaos engineering       │  • PHI-aware hybrid vector        │
-│  • 20 banking policies     │  • 10 medical guidelines          │
-│                            │                                    │
-│  Tests: 13/13 ✓            │  Tests: 66/66 ✓                   │
+│  • 20 banking policies     │  • FHIR R4 ingestion (LOINC)     │
+│                            │  • Chaos engineering               │
+│  Tests: 13/13 ✓            │  Tests: 84/84 ✓                   │
 └────────────┬───────────────┴──────────────┬─────────────────────┘
              │                              │
              │    pip install from git      │
@@ -75,8 +75,8 @@ A modular AI platform demonstrating enterprise patterns: audit trails, policy-gr
 |--------|--------|-------------|-------|------|
 | [intelliflow-core](https://github.com/kmufti7/intelliflow-core) | Platform | Shared governance UI, contracts, helpers | 32 | [View](https://github.com/kmufti7/intelliflow-core) |
 | [SupportFlow](https://github.com/kmufti7/intelliflow-supportflow) | Banking | Policy-grounded responses, chaos mode | 13 | [View](https://github.com/kmufti7/intelliflow-supportflow) |
-| [CareFlow](https://github.com/kmufti7/intelliflow-careflow) | Healthcare | Deterministic reasoning, PHI-aware vector | 66 | [View](https://github.com/kmufti7/intelliflow-careflow) |
-| **Total** | | | **111** | |
+| [CareFlow](https://github.com/kmufti7/intelliflow-careflow) | Healthcare | Deterministic reasoning, PHI-aware vector, FHIR, chaos | 84 | [View](https://github.com/kmufti7/intelliflow-careflow) |
+| **Total** | | | **129** | |
 
 ---
 
@@ -147,8 +147,8 @@ python care_app.py --mode=enterprise
 
 | Metric | Value |
 |--------|-------|
-| Total tests | 111 (32 + 13 + 66) |
-| Test coverage | Extraction, reasoning, routing, chaos, PHI safety |
+| Total tests | 129 (32 + 13 + 84) |
+| Test coverage | Extraction, reasoning, routing, chaos, PHI safety, FHIR |
 | Actual build time | ~6 hours |
 | Estimated (traditional) | 29-48 hours |
 | Time savings | 85%+ |
@@ -199,7 +199,7 @@ streamlit run app.py
 cd intelliflow-careflow
 pip install -r requirements.txt
 cp .env.example .env  # Add OPENAI_API_KEY
-python test_suite.py  # 66/66 tests
+python test_suite.py  # 84/84 tests
 streamlit run care_app.py
 ```
 
