@@ -25,8 +25,8 @@
 |--------|-------|-------------|
 | intelliflow-core | 32 | Contracts, helpers, governance UI components |
 | SupportFlow | 13 | Classification, routing, policy retrieval, ticket creation |
-| CareFlow | 66 | Extraction (11), Reasoning (14), Booking (11), Concept Query (15), Retrieval (15) |
-| **Total** | **111** | |
+| CareFlow | 69 | Extraction (11), Reasoning (14), Booking (11), Concept Query (15), Retrieval (15), FHIR Ingest (3) |
+| **Total** | **114** | |
 
 ## CI/CD
 
