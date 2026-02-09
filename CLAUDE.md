@@ -1,14 +1,14 @@
 # IntelliFlow OS — Working Memory
 
 ## Critical Rules
-- **NEVER push private artifacts to GitHub.** Always confirm before any push. (portfolio_writeup/, linkedin_experience.md are .gitignored)
+- **NEVER push private artifacts to GitHub.** Always confirm before any push. (portfolio_writeup/ is .gitignored)
 - **Post-write verification:** After batch file creation, re-read files to confirm content matches spec before reporting done.
 - **Ask before pushing personal content.** User burned once — always confirm.
 
 ## Project Structure
 - 4 repos: intelliflow-os (overview), intelliflow-core (SDK), intelliflow-supportflow, intelliflow-careflow
 - 129 total tests (32 core + 13 SupportFlow + 84 CareFlow)
-- Private artifacts in `portfolio_writeup/` (01-10 + PRIVATE_CHANGELOG.md) and `linkedin_experience.md`
+- Private artifacts in `portfolio_writeup/` (01-10 + PRIVATE_CHANGELOG.md + linkedin_experience.md)
 - CLAUDE.md in repo root governs private artifact handling
 
 ## Private Artifacts Inventory
@@ -20,7 +20,7 @@
 - linkedin_experience.md: LinkedIn experience entry
 
 ## Public Enterprise Docs (pushed)
-- 12 docs: DOCS_INDEX.md, ARCHITECTURE.md (Mermaid), SECURITY.md (OWASP LLM Top 10), GOVERNANCE.md (NIST AI RMF + EU AI Act), COST_MODEL.md, TEST_STRATEGY.md, CHANGELOG.md, CLAUDE.md, DATA_DICTIONARY.md, OBSERVABILITY.md, VENDOR_COMPARISON.md, ETHICS.md
+- 11 docs: DOCS_INDEX.md, ARCHITECTURE.md (Mermaid), SECURITY.md (OWASP LLM Top 10), GOVERNANCE.md (NIST AI RMF + EU AI Act), COST_MODEL.md, TEST_STRATEGY.md, CHANGELOG.md, DATA_DICTIONARY.md, OBSERVABILITY.md, VENDOR_COMPARISON.md, ETHICS.md
 
 ---
 
@@ -29,7 +29,7 @@
 This project includes non-code deliverables (LinkedIn posts, resume, interview prep, documentation).
 
 ### Private Artifacts
-* Private artifacts live in `portfolio_writeup/` and `linkedin_experience.md` (both .gitignored).
+* Private artifacts live in `portfolio_writeup/` (.gitignored), including `linkedin_experience.md`.
 * Log all private artifact changes to `portfolio_writeup/PRIVATE_CHANGELOG.md` with date and summary.
 * Never commit private artifacts to GitHub.
 
