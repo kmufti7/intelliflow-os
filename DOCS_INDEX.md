@@ -18,6 +18,11 @@ This index is the fastest way to review enterprise readiness signals.
 | [ETHICS.md](ETHICS.md) | Responsible AI considerations |
 | [CHANGELOG.md](CHANGELOG.md) | Version history |
 
+## Strategy Documents
+| Document | Purpose |
+|----------|---------|
+| [DEVELOPER_EXPERIENCE_STRATEGY.md](DEVELOPER_EXPERIENCE_STRATEGY.md) | AI-native developer experience: capability tiers, build vs. buy, and productivity measurement |
+
 ## Modules
 | Module | Repository |
 |--------|------------|
