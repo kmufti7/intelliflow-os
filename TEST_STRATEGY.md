@@ -26,7 +26,8 @@
 | intelliflow-core | 32 | Contracts, helpers, governance UI components |
 | SupportFlow | 13 | Classification, routing, policy retrieval, ticket creation |
 | CareFlow | 84 | Extraction (11), Reasoning (14), Booking (11), Concept Query (15), Retrieval (15), FHIR Ingest (3), Chaos Mode (15) |
-| **Total** | **129** | |
+| AI-generated (ai_test_generator.py) | 35 | Boundary conditions, missing required fields, type validation across 3 Pydantic schemas |
+| **Total** | **164** | **129 hand-written + 35 AI-generated** |
 
 ## CI/CD
 
