@@ -110,6 +110,53 @@ Every **built** story must appear substantively in all 8 portfolio_writeup files
 
 ---
 
+## Feature Addition Cascade
+
+### Required: Feature Brief
+
+Before running `/add-feature`, the Architect Agent must produce a **Feature Brief** using the template at `docs/feature_briefs/TEMPLATE.md`. The brief contains:
+- What was built (technical) and why it matters (business)
+- PM framing and interview hook
+- Architecture impact and new data structures
+- Trade-offs, rough edges, ATS keywords
+- Metrics changes and forbidden phrase additions
+- Cascade checklist for verification
+
+### Cascade Sequence
+
+When `/add-feature` is invoked with a Feature Brief:
+
+1. Read the Feature Brief
+2. Update CLAUDE.md Truth Table (if metrics changed)
+3. Update CLAUDE.md Story Inventory (add new story row)
+4. Update CLAUDE.md Forbidden Phrases (if brief specifies any)
+5. Update `portfolio_config.yaml` (if metrics changed)
+6. Run `python scripts/render_portfolio.py` (if config changed)
+7. Update all 8 portfolio_writeup files (substantively — see Substance Rule)
+8. Update `linkedin_experience.md`
+9. Update `ARCHITECTURE.md` (if architecture impact = yes)
+10. Update `DATA_DICTIONARY.md` (if new data structures)
+11. Update `CHANGELOG.md` with new entry
+12. Run `python scripts/verify_cascade.py` — must pass
+13. Print cascade report
+
+### Substance Rule (Enforced)
+
+Each portfolio file update must include WHAT was built, WHY it matters, and HOW it works — at the depth level appropriate to that file. A keyword mention is NOT substantive. The Feature Brief provides the strategic context needed to write substantive content for each file's audience.
+
+### Verification
+
+Run `python scripts/verify_cascade.py` after every cascade. It checks:
+- Every built story has substance in 6+ of 8 portfolio files
+- NOT BUILT stories do not appear in portfolio files
+- No forbidden phrases in any portfolio file
+- Numbers in portfolio files match `portfolio_config.yaml`
+- Architecture diagrams exist (if applicable)
+- CHANGELOG.md has recent entries
+- Enterprise docs verification passes (if script exists)
+
+---
+
 ## Output Standards
 
 1. **Cornell-style numbering:** 1, 1.1, 1.1.1 for outputs longer than ~10 lines
