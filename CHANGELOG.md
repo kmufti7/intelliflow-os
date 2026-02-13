@@ -2,6 +2,18 @@
 
 All notable changes to IntelliFlow OS are documented here.
 
+## 2026-02-13 — NL Log Query Cascade (Story K)
+- Built: NL Log Query tool (tools/nl_log_query.py) — LLM translates, Python validates, code executes
+- Added: 15 tests (tests/test_nl_log_query.py) covering injection attacks, column whitelist, end-to-end
+- Cascaded: Story K substantively updated across all 8 portfolio files + linkedin_experience.md
+- Added: Pain Point #13 (searching audit logs requires SQL expertise) in 04_enterprise_pain_points.md
+- Added: ADR-017 (NL Log Query with SQL validation) in 05_architecture_decisions.md
+- Added: NL Log Query limitations section (5 items) in 06_rough_edges_roadmap.md
+- Added: 3 talking points for Story K in 07_interview_talking_points.md
+- Updated: Test counts 164 → 179 (144 hand-written + 35 AI-generated) across all files
+- Updated: Developer tools 1 → 2 in CLAUDE.md truth table and portfolio_config.yaml
+- Added: Feature Brief (docs/feature_briefs/story_k_nl_log_query.md)
+
 ## 2026-02-12 — AI Test Generator Cascade (Story J)
 - Cascaded: Story J (AI Test Generator) substantively updated across all 8 portfolio files
 - Added: Pain Point #12 (schema validation test coverage) in 04_enterprise_pain_points.md

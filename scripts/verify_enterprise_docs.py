@@ -80,7 +80,7 @@ check_exists_and_nonempty("COST_MODEL.md")
 # --- TEST_STRATEGY.md ---
 content = check_exists_and_nonempty("TEST_STRATEGY.md")
 if content:
-    check_contains("TEST_STRATEGY.md", content, "164")
+    check_contains("TEST_STRATEGY.md", content, "179")
 
 # --- DATA_DICTIONARY.md ---
 check_exists_and_nonempty("DATA_DICTIONARY.md")

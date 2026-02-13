@@ -14,7 +14,7 @@ These facts are verified. Do NOT contradict them in any output.
 
 | Claim | Value | Source |
 |-------|-------|--------|
-| Total tests | 164 (129 hand-written + 35 AI-generated) | CI + test runs |
+| Total tests | 179 (144 hand-written + 35 AI-generated) | CI + test runs |
 | intelliflow-core tests | 32 | CI |
 | SupportFlow tests | 13 | CI |
 | CareFlow tests | 84 (81 original + 3 integration) | CI |
@@ -31,7 +31,8 @@ These facts are verified. Do NOT contradict them in any output.
 | CareFlow Chaos Mode | FAISS/Pinecone failure injection, graceful fallback | Code review |
 | SupportFlow Chaos Mode | Database/vector store failure injection | Code review |
 | Total LOC | ~12,500+ | Repo stats |
-| Developer tools | 1 built (AI test generator). NL log query + scaffold generator are NOT built. | IntelliFlow_OS/tools/ai_test_generator.py |
+| Developer tools | 2 built (AI test generator, NL log query). Scaffold generator is NOT built. | IntelliFlow_OS/tools/ |
+| NL Log Query | Natural language → SQL WHERE clause. Column whitelist, blocked keywords, ast validation. 15 tests. | tools/nl_log_query.py |
 
 ---
 
@@ -46,7 +47,10 @@ These facts are verified. Do NOT contradict them in any output.
 | "Portfolio project" | "Platform" or "System" |
 | "Demo" (as noun) | "Implementation" or "Reference implementation" |
 | Strawman hooks ("Stop doing X", "Everyone ships garbage") | "Here's what I built and why" |
-| "3 developer tools" | "1 developer tool (AI test generator)" — NL log query and scaffold generator are NOT built |
+| "3 developer tools" | "2 developer tools (AI test generator, NL log query)" — scaffold generator is NOT built |
+| "1 developer tool" | "2 developer tools (AI test generator, NL log query)" |
+| "164 total tests" | "179 total tests (144 hand-written + 35 AI-generated)" |
+| "129 hand-written tests" | "144 hand-written tests" |
 | "intelliflow-core/tools/" | "IntelliFlow_OS/tools/" (actual location of ai_test_generator.py) |
 
 ---
@@ -94,7 +98,7 @@ Every **built** story must appear substantively in all 8 portfolio_writeup files
 | H | FHIR Dual-Mode Ingestion | Legacy clinic notes + FHIR R4 Bundles. Adapter pattern: both paths → same extraction output. LOINC 4548-4. CMS mandate context. | ✅ Built |
 | I | Enterprise Evidence Pack | 11 docs (NIST AI RMF, OWASP LLM Top 10, EU AI Act, ethics, observability, etc.). 59 automated verification checks. Documentation drift prevention. | ✅ Built |
 | J | AI Test Generator | Reads 3 Pydantic schemas → generates 35 edge-case pytest tests. Schema-aware. "LLM translates, code decides" pattern. Location: IntelliFlow_OS/tools/ai_test_generator.py | ✅ Built |
-| K | NL Log Query | Natural language → SQL WHERE clause. LLM translates, Python validates (SELECT only, known columns, no injection), executes. | ⛔ NOT BUILT |
+| K | NL Log Query | Natural language → SQL WHERE clause. LLM translates, Python validates (column whitelist, blocked keywords, string stripping), code executes against SQLite. 15 tests. Location: IntelliFlow_OS/tools/nl_log_query.py | ✅ Built |
 | L | Scaffold Generator | Developer describes intent → platform-compliant Python boilerplate. Reads schemas, injects governance patterns. ast.parse() validation. | ⛔ NOT BUILT |
 
 ---

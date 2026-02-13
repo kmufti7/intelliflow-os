@@ -77,7 +77,8 @@ A modular AI platform demonstrating enterprise patterns: audit trails, policy-gr
 | [SupportFlow](https://github.com/kmufti7/intelliflow-supportflow) | Banking | Policy-grounded responses, chaos mode | 13 | [View](https://github.com/kmufti7/intelliflow-supportflow) |
 | [CareFlow](https://github.com/kmufti7/intelliflow-careflow) | Healthcare | Deterministic reasoning, PHI-aware vector, FHIR, chaos | 84 | [View](https://github.com/kmufti7/intelliflow-careflow) |
 | AI Test Generator | Platform | Schema-aware Pydantic test generation | 35 | This repo |
-| **Total** | | | **164** | **129 hand-written + 35 AI-generated** |
+| NL Log Query | Platform | Natural language audit log search, SQL injection prevention | 15 | This repo |
+| **Total** | | | **179** | **144 hand-written + 35 AI-generated** |
 
 ---
 
@@ -148,7 +149,7 @@ python care_app.py --mode=enterprise
 
 | Metric | Value |
 |--------|-------|
-| Total tests | 164 (129 hand-written + 35 AI-generated) |
+| Total tests | 179 (144 hand-written + 35 AI-generated) |
 | Test coverage | Extraction, reasoning, routing, chaos, PHI safety, FHIR, schema validation |
 | Actual build time | ~7 hours |
 | Estimated (traditional) | 29-48 hours |
