@@ -1,0 +1,53 @@
+# portfolio_config.yaml
+# Single source of truth for metrics that appear across portfolio files.
+# Used by render_portfolio.py to replace {{placeholders}} in template files.
+
+metrics:
+  # Test counts
+  total_tests: 164
+  hand_written_tests: 129
+  ai_generated_tests: 35
+  core_tests: 32
+  supportflow_tests: 13
+  careflow_tests: 84
+  careflow_original_tests: 81
+  careflow_integration_tests: 3
+  fhir_tests: 3
+  chaos_tests_careflow: 12
+  chaos_tests_total: 28
+
+  # Enterprise docs
+  enterprise_docs: 11
+  verification_checks: 59
+
+  # Build metrics
+  build_time_actual: "~7 hours"
+  build_time_actual_sf: "~4 hours"
+  build_time_actual_cf: "~3 hours"
+  build_time_estimated: "29-48 hours"
+  time_savings: "85%+"
+  total_loc: "12,500+"
+
+  # SupportFlow specifics
+  sf_policies: 20
+  sf_keyword_mappings: "60+"
+  sf_loc: "5,693"
+
+  # CareFlow specifics
+  cf_guidelines: 10
+  cf_test_patients: 5
+  cf_regex_success_rate: "100%"
+  cf_loc: "~7,000+"
+  cf_gap_types: 3
+
+  # Developer tools
+  developer_tools: 1
+  pydantic_schemas: 3
+
+  # Cost
+  model: "gpt-4o-mini"
+  embedding_model: "text-embedding-3-small"
+
+  # Platform
+  modules: 2
+  repos: 4

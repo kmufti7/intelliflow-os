@@ -31,7 +31,7 @@ These facts are verified. Do NOT contradict them in any output.
 | CareFlow Chaos Mode | FAISS/Pinecone failure injection, graceful fallback | Code review |
 | SupportFlow Chaos Mode | Database/vector store failure injection | Code review |
 | Total LOC | ~12,500+ | Repo stats |
-| Developer tools | 3 (AI test generator, NL log query, scaffold generator) | intelliflow-core/tools/ |
+| Developer tools | 1 built (AI test generator). NL log query + scaffold generator are NOT built. | IntelliFlow_OS/tools/ai_test_generator.py |
 
 ---
 
@@ -46,6 +46,8 @@ These facts are verified. Do NOT contradict them in any output.
 | "Portfolio project" | "Platform" or "System" |
 | "Demo" (as noun) | "Implementation" or "Reference implementation" |
 | Strawman hooks ("Stop doing X", "Everyone ships garbage") | "Here's what I built and why" |
+| "3 developer tools" | "1 developer tool (AI test generator)" — NL log query and scaffold generator are NOT built |
+| "intelliflow-core/tools/" | "IntelliFlow_OS/tools/" (actual location of ai_test_generator.py) |
 
 ---
 
@@ -78,22 +80,22 @@ Run `python scripts/verify_portfolio_update.py` after any portfolio file changes
 
 ## Story Inventory
 
-Every story must appear substantively in all 8 portfolio_writeup files + linkedin_experience.md:
+Every **built** story must appear substantively in all 8 portfolio_writeup files + linkedin_experience.md. Stories marked NOT BUILT must NOT appear in portfolio files until implemented.
 
-| ID | Story | Key Details |
-|----|-------|-------------|
-| A | Deterministic Reasoning | "LLM extracts, code decides, LLM explains." A1C 8.2 > 7.0 = True. Python, not LLM. 3 gap types with severity tiers. |
-| B | PHI-Aware Data Residency | Patient data → local FAISS. Guidelines → Pinecone cloud. Concept Query Builder strips identifiers. Two modes: local/enterprise. |
-| C | Platform Architecture | intelliflow-core: pip-installable SDK. 3 Pydantic contracts. Both modules import, not copy-paste. |
-| D | Cost Optimization (5 Layers) | Regex-first (100%), structured outputs (enums), gpt-4o-mini (10x cheaper), local FAISS (zero cloud cost for PHI), token tracking. |
-| E | Chaos Mode Bug Fix | 12/12 tests passing, feature broken. Front-door bypass (dropdown skipped orchestrator). Silent catch (except Exception swallowed ChaosError). Fix: single entry point + explicit ChaosError catch. |
-| F | "Tests That Lie" | Unit tests validated components, not integration. Added 3 integration tests mirroring real user entry points. Principle: at least one test per feature must hit the real entry point. |
-| G | Chaos as Resilience | Both modules: sidebar toggle, failure injection, graceful fallback, audit-logged. Demo-able in 3 minutes. Enterprise buyer question: "what happens when your vector store goes down?" |
-| H | FHIR Dual-Mode Ingestion | Legacy clinic notes + FHIR R4 Bundles. Adapter pattern: both paths → same extraction output. LOINC 4548-4. CMS mandate context. |
-| I | Enterprise Evidence Pack | 11 docs (NIST AI RMF, OWASP LLM Top 10, EU AI Act, ethics, observability, etc.). 59 automated verification checks. Documentation drift prevention. |
-| J | AI Test Generator | Reads 3 Pydantic schemas → generates 35 edge-case pytest tests. Schema-aware. "LLM translates, code decides" pattern. |
-| K | NL Log Query | Natural language → SQL WHERE clause. LLM translates, Python validates (SELECT only, known columns, no injection), executes. |
-| L | Scaffold Generator | Developer describes intent → platform-compliant Python boilerplate. Reads schemas, injects governance patterns. ast.parse() validation. |
+| ID | Story | Key Details | Status |
+|----|-------|-------------|--------|
+| A | Deterministic Reasoning | "LLM extracts, code decides, LLM explains." A1C 8.2 > 7.0 = True. Python, not LLM. 3 gap types with severity tiers. | ✅ Built |
+| B | PHI-Aware Data Residency | Patient data → local FAISS. Guidelines → Pinecone cloud. Concept Query Builder strips identifiers. Two modes: local/enterprise. | ✅ Built |
+| C | Platform Architecture | intelliflow-core: pip-installable SDK. 3 Pydantic contracts. Both modules import, not copy-paste. | ✅ Built |
+| D | Cost Optimization (5 Layers) | Regex-first (100%), structured outputs (enums), gpt-4o-mini (10x cheaper), local FAISS (zero cloud cost for PHI), token tracking. | ✅ Built |
+| E | Chaos Mode Bug Fix | 12/12 tests passing, feature broken. Front-door bypass (dropdown skipped orchestrator). Silent catch (except Exception swallowed ChaosError). Fix: single entry point + explicit ChaosError catch. | ✅ Built |
+| F | "Tests That Lie" | Unit tests validated components, not integration. Added 3 integration tests mirroring real user entry points. Principle: at least one test per feature must hit the real entry point. | ✅ Built |
+| G | Chaos as Resilience | Both modules: sidebar toggle, failure injection, graceful fallback, audit-logged. Demo-able in 3 minutes. Enterprise buyer question: "what happens when your vector store goes down?" | ✅ Built |
+| H | FHIR Dual-Mode Ingestion | Legacy clinic notes + FHIR R4 Bundles. Adapter pattern: both paths → same extraction output. LOINC 4548-4. CMS mandate context. | ✅ Built |
+| I | Enterprise Evidence Pack | 11 docs (NIST AI RMF, OWASP LLM Top 10, EU AI Act, ethics, observability, etc.). 59 automated verification checks. Documentation drift prevention. | ✅ Built |
+| J | AI Test Generator | Reads 3 Pydantic schemas → generates 35 edge-case pytest tests. Schema-aware. "LLM translates, code decides" pattern. Location: IntelliFlow_OS/tools/ai_test_generator.py | ✅ Built |
+| K | NL Log Query | Natural language → SQL WHERE clause. LLM translates, Python validates (SELECT only, known columns, no injection), executes. | ⛔ NOT BUILT |
+| L | Scaffold Generator | Developer describes intent → platform-compliant Python boilerplate. Reads schemas, injects governance patterns. ast.parse() validation. | ⛔ NOT BUILT |
 
 ---
 
@@ -102,7 +104,7 @@ Every story must appear substantively in all 8 portfolio_writeup files + linkedi
 | Repo | Purpose | URL |
 |------|---------|-----|
 | intelliflow-os | Platform overview (this repo) | https://github.com/kmufti7/intelliflow-os |
-| intelliflow-core | Shared SDK + developer tools | https://github.com/kmufti7/intelliflow-core |
+| intelliflow-core | Shared SDK | https://github.com/kmufti7/intelliflow-core |
 | intelliflow-supportflow | Banking module | https://github.com/kmufti7/intelliflow-supportflow |
 | intelliflow-careflow | Healthcare module | https://github.com/kmufti7/intelliflow-careflow |
 
