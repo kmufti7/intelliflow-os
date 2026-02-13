@@ -60,7 +60,7 @@ STORY_TERMS = {
 
 FORBIDDEN_PHRASES = [
     "portfolio project",
-    "3 developer tools",
+    "2 developer tools",
     "intelliflow-core/tools/",
     "SupportFlow uses vector search",
     "SupportFlow uses FAISS",

@@ -4,8 +4,8 @@
 
 metrics:
   # Test counts
-  total_tests: 179
-  hand_written_tests: 144
+  total_tests: 193
+  hand_written_tests: 158
   ai_generated_tests: 35
   core_tests: 32
   supportflow_tests: 13
@@ -41,8 +41,9 @@ metrics:
   cf_gap_types: 3
 
   # Developer tools
-  developer_tools: 2
+  developer_tools: 3
   nl_log_query_tests: 15
+  scaffold_generator_tests: 14
   pydantic_schemas: 3
 
   # Cost

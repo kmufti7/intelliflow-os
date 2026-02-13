@@ -2,6 +2,19 @@
 
 All notable changes to IntelliFlow OS are documented here.
 
+## 2026-02-13 — Scaffold Generator Cascade (Story L)
+- Built: Scaffold Generator tool (tools/scaffold_generator.py) — LLM generates, ast.parse() validates
+- Added: 14 tests (tests/test_scaffold_generator.py) covering validation, retries, cost tracking, end-to-end
+- Cascaded: Story L substantively updated across all 8 portfolio files + linkedin_experience.md
+- Added: Pain Point #14 (new contributors reinvent governance patterns) in 04_enterprise_pain_points.md
+- Added: ADR-018 (Scaffold Generator with ast.parse() validation) in 05_architecture_decisions.md
+- Added: Scaffold Generator limitations section (5 items) in 06_rough_edges_roadmap.md
+- Added: 3 talking points for Story L in 07_interview_talking_points.md
+- Updated: Test counts 179 → 193 (158 hand-written + 35 AI-generated) across all files
+- Updated: Developer tools 2 → 3 in CLAUDE.md truth table and portfolio_config.yaml
+- Removed: "3 developer tools" from forbidden phrases (now true)
+- Added: Feature Brief (docs/feature_briefs/story_l_scaffold_generator.md)
+
 ## 2026-02-13 — NL Log Query Cascade (Story K)
 - Built: NL Log Query tool (tools/nl_log_query.py) — LLM translates, Python validates, code executes
 - Added: 15 tests (tests/test_nl_log_query.py) covering injection attacks, column whitelist, end-to-end

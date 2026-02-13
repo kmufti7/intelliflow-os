@@ -28,7 +28,8 @@
 | CareFlow | 84 | Extraction (11), Reasoning (14), Booking (11), Concept Query (15), Retrieval (15), FHIR Ingest (3), Chaos Mode (15) |
 | AI-generated (ai_test_generator.py) | 35 | Boundary conditions, missing required fields, type validation across 3 Pydantic schemas |
 | NL Log Query (nl_log_query.py) | 15 | Injection attacks (6 patterns), column whitelist, end-to-end query, cost tracking, self-logging |
-| **Total** | **179** | **144 hand-written + 35 AI-generated** |
+| Scaffold Generator (scaffold_generator.py) | 14 | ast.parse() validation, markdown fence stripping, retry logic, cost tracking, end-to-end generation |
+| **Total** | **193** | **158 hand-written + 35 AI-generated** |
 
 ## CI/CD
 
