@@ -2,6 +2,12 @@
 
 All notable changes to IntelliFlow OS are documented here.
 
+## 2026-02-13 — Public Files Update (Session 5)
+- Added: 3 Mermaid diagrams to ARCHITECTURE.md (FHIR Dual-Mode Ingestion, Chaos Mode Control Flow, Developer Tools Layer) — total now 6
+- Updated: DATA_DICTIONARY.md with audit event types table, NL Log Query data structures, Scaffold Generator data structures
+- Fixed: Stale test counts in portfolio files (111→193, 164→193, 144→158 hand-written)
+- Verified: intelliflow-os README.md current (193 tests, 3 developer tools, all module rows)
+
 ## 2026-02-13 — Scaffold Generator Cascade (Story L)
 - Built: Scaffold Generator tool (tools/scaffold_generator.py) — LLM generates, ast.parse() validates
 - Added: 14 tests (tests/test_scaffold_generator.py) covering validation, retries, cost tracking, end-to-end
