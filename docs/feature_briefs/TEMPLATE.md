@@ -136,4 +136,17 @@ _For Claude Code to confirm after running /add-feature._
 
 ---
 
+## 13. Public README Impact
+
+_Does this feature require updates to the public intelliflow-os README.md?_
+
+**Module Overview table:** [Yes/No — does this add a new module row or change test counts?]
+**Developer Tools section:** [Yes/No — is this a new developer tool needing a subsection?]
+**Platform Patterns section:** [Yes/No — does this introduce a new shared discipline?]
+**Build Metrics table:** [Yes/No — do total test counts change?]
+
+_Note: Build times, hour estimates, and time savings are NEVER included in the public README._
+
+---
+
 **End of Feature Brief**

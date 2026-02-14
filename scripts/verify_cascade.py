@@ -4,11 +4,15 @@ verify_cascade.py — Verifies that all platform files are consistent.
 
 Checks:
 1. Every "Built" story in CLAUDE.md has substance in all 8 portfolio files
-2. Numbers in portfolio files match portfolio_config.yaml
+2. NOT BUILT stories absent from portfolio files
 3. No forbidden phrases in any portfolio, README, or enterprise doc
-4. ARCHITECTURE.md has Mermaid diagrams for each module
-5. CHANGELOG.md has recent entries (flags staleness > 30 days)
-6. verify_enterprise_docs.py passes
+4. Numbers in portfolio files match portfolio_config.yaml
+5. ARCHITECTURE.md has Mermaid diagrams for each module
+6. CHANGELOG.md has recent entries (flags staleness > 30 days)
+7. verify_enterprise_docs.py passes
+8. README.md test total matches portfolio_config.yaml
+9. README.md covers all built stories
+10. README.md has no forbidden build time content
 """
 
 import io
@@ -289,6 +293,89 @@ def run_enterprise_verification():
     return []
 
 
+README_MD = REPO_ROOT / "README.md"
+
+# Forbidden content in public README (build times are internal metrics)
+README_FORBIDDEN = [
+    "actual build time",
+    "estimated (traditional)",
+    "time savings",
+    "29-48 hours",
+    "85%+",
+]
+
+
+def check_readme_test_total(metrics):
+    """Check README.md test total matches portfolio_config.yaml."""
+    issues = []
+    if not README_MD.exists():
+        issues.append("README.md does not exist")
+        return issues
+
+    content = read_file(README_MD)
+    expected = str(metrics.get("total_tests", ""))
+    if not expected:
+        return issues
+
+    if expected not in content:
+        issues.append(f"README.md does not contain expected test total '{expected}'")
+
+    return issues
+
+
+def check_readme_story_coverage(built_stories):
+    """Check README.md mentions key features from built stories."""
+    issues = []
+    if not README_MD.exists():
+        issues.append("README.md does not exist")
+        return issues
+
+    content = read_file(README_MD).lower()
+
+    # Key terms that must appear in README for built stories
+    readme_terms = {
+        "A": ["deterministic"],
+        "B": ["phi", "faiss"],
+        "C": ["intelliflow-core"],
+        "D": ["regex-first"],
+        "G": ["chaos"],
+        "H": ["fhir"],
+        "J": ["ai test generator"],
+        "K": ["nl log query"],
+        "L": ["scaffold generator"],
+    }
+
+    missing = []
+    for story_id in built_stories:
+        terms = readme_terms.get(story_id, [])
+        if not terms:
+            continue
+        found = any(t in content for t in terms)
+        if not found:
+            missing.append(f"Story {story_id} (terms: {terms})")
+
+    if missing:
+        issues.append(f"README.md missing coverage for: {', '.join(missing)}")
+
+    return issues
+
+
+def check_readme_forbidden_content():
+    """Check README.md does not contain forbidden build time content."""
+    issues = []
+    if not README_MD.exists():
+        issues.append("README.md does not exist")
+        return issues
+
+    content = read_file(README_MD).lower()
+
+    for phrase in README_FORBIDDEN:
+        if phrase.lower() in content:
+            issues.append(f"README.md contains forbidden content: '{phrase}'")
+
+    return issues
+
+
 def main():
     print("=" * 60)
     print("VERIFY CASCADE — IntelliFlow OS Consistency Check")
@@ -384,6 +471,42 @@ def main():
     else:
         checks_passed += 1
         print(f"  ✅ Enterprise docs verification passed (59/59)")
+
+    # 8. README test total
+    print("\n🔢 Checking README.md test total...")
+    checks_run += 1
+    issues = check_readme_test_total(metrics)
+    if issues:
+        all_issues.extend(issues)
+        for i in issues:
+            print(f"  ❌ {i}")
+    else:
+        checks_passed += 1
+        print(f"  ✅ README.md test total matches config")
+
+    # 9. README story coverage
+    print("\n📖 Checking README.md story coverage...")
+    checks_run += 1
+    issues = check_readme_story_coverage(built)
+    if issues:
+        all_issues.extend(issues)
+        for i in issues:
+            print(f"  ❌ {i}")
+    else:
+        checks_passed += 1
+        print(f"  ✅ README.md covers all built stories")
+
+    # 10. README forbidden content
+    print("\n🚷 Checking README.md for forbidden build time content...")
+    checks_run += 1
+    issues = check_readme_forbidden_content()
+    if issues:
+        all_issues.extend(issues)
+        for i in issues:
+            print(f"  ❌ {i}")
+    else:
+        checks_passed += 1
+        print(f"  ✅ README.md has no forbidden build time content")
 
     # Summary
     print("\n" + "=" * 60)

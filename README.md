@@ -108,6 +108,21 @@ from intelliflow_core import add_governance_log, render_governance_panel
 
 ---
 
+## Developer Tools
+
+Three platform-level tools demonstrate the "LLM translates, code decides" pattern for developer workflows:
+
+### AI Test Generator
+Reads the 3 Pydantic schemas from `intelliflow-core` via `FieldInfo` introspection and generates 35 edge-case pytest tests. The LLM produces test code; `pytest` validates correctness. Covers boundary conditions and type constraints that manual tests often miss.
+
+### NL Log Query
+Translates natural language questions ("show me all failed extractions from today") into SQL `WHERE` clauses for the audit log. Python validates every generated clause against a column whitelist (11 allowed columns) and blocked keyword list (13 SQL keywords including `INSERT`, `DROP`, `SELECT`) before execution against SQLite.
+
+### Scaffold Generator
+Developers describe intent in plain English; the LLM generates platform-compliant Python boilerplate with governance patterns (audit logging, cost tracking, Pydantic contracts). Schema introspection via `importlib` discovers available contracts. `ast.parse()` validates syntax; failed parses trigger automatic retries (max 2).
+
+---
+
 ## PHI-Aware Data Residency
 
 CareFlow demonstrates compliance-informed design for healthcare AI:
@@ -152,9 +167,6 @@ python care_app.py --mode=enterprise
 |--------|-------|
 | Total tests | 193 (158 hand-written + 35 AI-generated) |
 | Test coverage | Extraction, reasoning, routing, chaos, PHI safety, FHIR, schema validation |
-| Actual build time | ~7 hours |
-| Estimated (traditional) | 29-48 hours |
-| Time savings | 85%+ |
 
 ---
 

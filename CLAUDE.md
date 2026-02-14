@@ -55,6 +55,9 @@ These facts are verified. Do NOT contradict them in any output.
 | "164 total tests" | "193 total tests (158 hand-written + 35 AI-generated)" |
 | "129 hand-written tests" | "158 hand-written tests" |
 | "intelliflow-core/tools/" | "IntelliFlow_OS/tools/" (actual location of ai_test_generator.py) |
+| "Actual build time" (in public README/docs) | Build times are internal — keep in portfolio_writeup only |
+| "29-48 hours" (in public README/docs) | Build time estimates are internal — keep in portfolio_writeup only |
+| "Time savings" with percentages (in public README/docs) | Time savings metrics are internal — keep in portfolio_writeup only |
 
 ---
 

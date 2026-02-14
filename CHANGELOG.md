@@ -2,6 +2,14 @@
 
 All notable changes to IntelliFlow OS are documented here.
 
+## 2026-02-14 — README Sync + Cascade Integration (Session 5b)
+- Fixed: Removed internal build time metrics from public README.md (hours, estimates, time savings)
+- Added: Developer Tools section to README.md (AI Test Generator, NL Log Query, Scaffold Generator)
+- Added: Step 5b (public README updates) to /add-feature cascade command
+- Added: 3 new checks to verify_cascade.py (8: README test total, 9: story coverage, 10: forbidden content) — now 10/10
+- Added: Public content forbidden phrases to CLAUDE.md (build time data in README)
+- Added: Section 13 (Public README Impact) to Feature Brief template
+
 ## 2026-02-13 — Public Files Update (Session 5)
 - Added: 3 Mermaid diagrams to ARCHITECTURE.md (FHIR Dual-Mode Ingestion, Chaos Mode Control Flow, Developer Tools Layer) — total now 6
 - Updated: DATA_DICTIONARY.md with audit event types table, NL Log Query data structures, Scaffold Generator data structures
