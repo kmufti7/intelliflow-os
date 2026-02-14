@@ -55,9 +55,27 @@ These facts are verified. Do NOT contradict them in any output.
 | "164 total tests" | "193 total tests (158 hand-written + 35 AI-generated)" |
 | "129 hand-written tests" | "158 hand-written tests" |
 | "intelliflow-core/tools/" | "IntelliFlow_OS/tools/" (actual location of ai_test_generator.py) |
-| "Actual build time" (in public README/docs) | Build times are internal — keep in portfolio_writeup only |
-| "29-48 hours" (in public README/docs) | Build time estimates are internal — keep in portfolio_writeup only |
-| "Time savings" with percentages (in public README/docs) | Time savings metrics are internal — keep in portfolio_writeup only |
+
+
+### Public Content Forbidden Phrases (README.md, repo description)
+
+| Forbidden | Use Instead |
+|-----------|-------------|
+| "actual build time" / "build time" in metrics context | Build times are internal — keep in portfolio_writeup only |
+| "estimated (traditional)" | Build time estimates are internal — keep in portfolio_writeup only |
+| "time savings" | Time savings metrics are internal — keep in portfolio_writeup only |
+| specific hour counts in Build Metrics (e.g., "~7 hours", "40+ hours") | Omit from public files |
+| comparative time claims ("X hours vs Y hours") | Omit from public files |
+
+---
+
+### Diagram Single Source Rules
+
+- ARCHITECTURE.md is the source of truth for all Mermaid diagrams
+- README.md embeds ONLY the Platform Overview diagram (copied from ARCHITECTURE.md)
+- When Platform Overview changes in ARCHITECTURE.md → sync to README.md
+- verify_cascade.py Check 11 confirms README.md has Mermaid diagram and ARCHITECTURE.md reference
+- Detailed diagrams (FHIR, Chaos Mode, Developer Tools flow) live ONLY in ARCHITECTURE.md
 
 ---
 

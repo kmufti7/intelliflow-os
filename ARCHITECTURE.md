@@ -1,5 +1,36 @@
 # IntelliFlow OS — Architecture
 
+## Platform Overview
+```mermaid
+flowchart TD
+  CORE[intelliflow-core<br/>Platform SDK · 32 tests]
+
+  subgraph Applications
+    SF[SupportFlow<br/>Banking · 13 tests]
+    CF[CareFlow<br/>Healthcare · 84 tests]
+  end
+
+  subgraph Developer Tools
+    TG[AI Test Generator · 35 tests]
+    NL[NL Log Query · 15 tests]
+    SG[Scaffold Generator · 14 tests]
+  end
+
+  CORE --> SF
+  CORE --> CF
+  CORE --> TG
+  CORE --> NL
+  CORE --> SG
+
+  subgraph Data Residency
+    FAISS[(FAISS Local<br/>Patient Notes — PHI)]
+    PIN[(Pinecone Cloud<br/>Medical Guidelines)]
+  end
+
+  CF --> FAISS
+  CF --> PIN
+```
+
 ## Platform Shape
 ```mermaid
 flowchart LR

@@ -13,6 +13,7 @@ Checks:
 8. README.md test total matches portfolio_config.yaml
 9. README.md covers all built stories
 10. README.md has no forbidden build time content
+11. README.md has Mermaid diagram and links to ARCHITECTURE.md
 """
 
 import io
@@ -376,6 +377,24 @@ def check_readme_forbidden_content():
     return issues
 
 
+def check_readme_architecture_sync():
+    """Check README.md has Mermaid diagram and links to ARCHITECTURE.md."""
+    issues = []
+    if not README_MD.exists():
+        issues.append("README.md does not exist")
+        return issues
+
+    content = read_file(README_MD)
+
+    if "```mermaid" not in content:
+        issues.append("README.md has no Mermaid diagram (expected Platform Overview)")
+
+    if "ARCHITECTURE.md" not in content:
+        issues.append("README.md does not link to ARCHITECTURE.md for detailed diagrams")
+
+    return issues
+
+
 def main():
     print("=" * 60)
     print("VERIFY CASCADE — IntelliFlow OS Consistency Check")
@@ -507,6 +526,18 @@ def main():
     else:
         checks_passed += 1
         print(f"  ✅ README.md has no forbidden build time content")
+
+    # 11. README architecture sync
+    print("\n📐 Checking README.md architecture sync...")
+    checks_run += 1
+    issues = check_readme_architecture_sync()
+    if issues:
+        all_issues.extend(issues)
+        for i in issues:
+            print(f"  ❌ {i}")
+    else:
+        checks_passed += 1
+        print(f"  ✅ README.md has Mermaid diagram and ARCHITECTURE.md reference")
 
     # Summary
     print("\n" + "=" * 60)

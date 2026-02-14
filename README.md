@@ -8,55 +8,37 @@ A modular AI platform demonstrating enterprise patterns: audit trails, policy-gr
 
 ## Platform Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        APPLICATIONS                              │
-├────────────────────────────┬────────────────────────────────────┤
-│        SupportFlow         │            CareFlow                │
-│         (Banking)          │          (Healthcare)              │
-│                            │                                    │
-│  • Multi-agent routing     │  • Regex-first extraction         │
-│  • Policy citations        │  • Deterministic gap reasoning    │
-│  • Chaos engineering       │  • PHI-aware hybrid vector        │
-│  • 20 banking policies     │  • FHIR R4 ingestion (LOINC)     │
-│                            │  • Chaos engineering               │
-│  Tests: 13/13 ✓            │  Tests: 84/84 ✓                   │
-└────────────┬───────────────┴──────────────┬─────────────────────┘
-             │                              │
-             │    pip install from git      │
-             │                              │
-             └──────────────┬───────────────┘
-                            │
-┌───────────────────────────┴───────────────────────────────────┐
-│                     intelliflow-core                           │
-│                      (Platform SDK)                            │
-│                                                                │
-│  • GovernanceUI (Streamlit sidebar)                           │
-│  • AuditEventSchema, CostTrackingSchema (Pydantic contracts)  │
-│  • Helpers (event IDs, timestamps, cost calculation)          │
-│                                                                │
-│  Tests: 32/32 ✓                                                │
-└────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TD
+  CORE[intelliflow-core<br/>Platform SDK · 32 tests]
 
-                    DATA RESIDENCY (CareFlow)
+  subgraph Applications
+    SF[SupportFlow<br/>Banking · 13 tests]
+    CF[CareFlow<br/>Healthcare · 84 tests]
+  end
 
-┌─────────────────────┐          ┌─────────────────────┐
-│    FAISS (Local)    │          │  Pinecone (Cloud)   │
-│                     │          │                     │
-│  Patient Notes      │          │  Medical Guidelines │
-│  (PHI - never       │          │  (Public - safe     │
-│   leaves machine)   │          │   for cloud)        │
-└─────────────────────┘          └─────────────────────┘
-          │                                │
-          └────────────┬───────────────────┘
-                       │
-              ┌────────┴────────┐
-              │  Concept Query  │
-              │    Builder      │
-              │ (De-identifies  │
-              │  before query)  │
-              └─────────────────┘
+  subgraph Developer Tools
+    TG[AI Test Generator · 35 tests]
+    NL[NL Log Query · 15 tests]
+    SG[Scaffold Generator · 14 tests]
+  end
+
+  CORE --> SF
+  CORE --> CF
+  CORE --> TG
+  CORE --> NL
+  CORE --> SG
+
+  subgraph Data Residency
+    FAISS[(FAISS Local<br/>Patient Notes — PHI)]
+    PIN[(Pinecone Cloud<br/>Medical Guidelines)]
+  end
+
+  CF --> FAISS
+  CF --> PIN
 ```
+
+> For detailed architecture diagrams (FHIR ingestion, Chaos Mode, Developer Tools flow), see [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ---
 
@@ -110,16 +92,18 @@ from intelliflow_core import add_governance_log, render_governance_panel
 
 ## Developer Tools
 
-Three platform-level tools demonstrate the "LLM translates, code decides" pattern for developer workflows:
+IntelliFlow OS includes three developer utilities that demonstrate governed AI-assisted workflows.
 
-### AI Test Generator
-Reads the 3 Pydantic schemas from `intelliflow-core` via `FieldInfo` introspection and generates 35 edge-case pytest tests. The LLM produces test code; `pytest` validates correctness. Covers boundary conditions and type constraints that manual tests often miss.
+### AI Test Generator (Story J)
+Generates pytest test cases from natural language descriptions. Uses Claude to produce test code, then validates syntax with ast.parse() before writing files. Pattern: **"LLM generates, ast.parse() validates"** — ensures generated code is syntactically valid before execution.
 
-### NL Log Query
-Translates natural language questions ("show me all failed extractions from today") into SQL `WHERE` clauses for the audit log. Python validates every generated clause against a column whitelist (11 allowed columns) and blocked keyword list (13 SQL keywords including `INSERT`, `DROP`, `SELECT`) before execution against SQLite.
+### NL Log Query (Story K)
+Translates natural language questions into SQL queries against audit logs. Prevents SQL injection through parameterized queries and query validation. Pattern: **"LLM translates, Python validates"** — LLM produces the query structure, Python enforces security constraints.
 
-### Scaffold Generator
-Developers describe intent in plain English; the LLM generates platform-compliant Python boilerplate with governance patterns (audit logging, cost tracking, Pydantic contracts). Schema introspection via `importlib` discovers available contracts. `ast.parse()` validates syntax; failed parses trigger automatic retries (max 2).
+### Scaffold Generator (Story L)
+Creates boilerplate module structures from high-level descriptions. Generates directory trees, __init__.py files, and starter code. Validates all generated Python with ast.parse(). Pattern: **"LLM generates, ast.parse() validates"** — same validation pattern as test generator, applied to production scaffolding.
+
+All three tools follow the platform's core principle: **deterministic validation of LLM outputs**.
 
 ---
 

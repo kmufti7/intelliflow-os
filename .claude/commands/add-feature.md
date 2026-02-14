@@ -49,14 +49,17 @@ For EACH of these 8 files, READ the full file first, then ADD content appropriat
 
 **FORBIDDEN PHRASES:** Check CLAUDE.md forbidden phrases list. Do not use any of them in any file.
 
-### Step 5b: Update public README.md (intelliflow-os)
-Check whether this feature affects the public README.md:
-- **Module Overview table:** If test counts changed or a new module/tool was added, update the table rows and total
-- **Developer Tools section:** If this is a new developer tool, add a subsection with the same depth as existing tools (what it does, what pattern it follows, key validation mechanism)
-- **Build Metrics table:** Update total test count if it changed
-- **Platform Patterns section:** If a new shared discipline was introduced, add it
+### Step 5b: Update README.md (if applicable)
 
-**NEVER add build times, hour estimates, or time savings to the public README.** These are internal metrics kept in portfolio_writeup only.
+Check if this feature affects README.md:
+
+1. **New module or tool?** → Add row to Module Overview table
+2. **Test count changed?** → Update test totals in Module Overview and Build Metrics
+3. **New architecture pattern?** → Check if Platform Overview diagram needs update
+4. **Architecture diagram changed?** → Sync Platform Overview from ARCHITECTURE.md to README.md
+5. **New dedicated section needed?** → Add section with same depth as existing sections
+
+If none apply, skip to Step 6.
 
 ### Step 6: Update ARCHITECTURE.md (if architecture impact = yes)
 - Read Section 5 of the brief
