@@ -185,6 +185,33 @@ Run `python scripts/verify_cascade.py` after every cascade. It checks:
 
 ---
 
+## Project Context
+
+This workspace primarily uses Python. Always use Python 3.10+ type hint syntax (e.g., `X | None` instead of `Optional[X]`, `list[str]` instead of `List[str]`) unless explicitly targeting Python 3.9 or earlier. When writing Python, ensure compatibility with the user's runtime version.
+
+---
+
+## Environment Notes (Windows)
+
+- Be aware of Windows-specific issues: file locks when deleting directories, Unicode encoding errors in terminal output. Use `encoding='utf-8'` for file operations and handle `PermissionError` gracefully.
+- When starting local servers, verify the port is free before binding and provide clear instructions for the user to access the URL.
+- GitHub CLI (`gh`) may not be pre-installed. Check for it before assuming availability.
+
+---
+
+## Session Scope
+
+- Do NOT attempt to switch project directories or session roots mid-conversation. If the user asks to work on a different project, advise them to start a new Claude Code session in that directory.
+- When the user references a different project folder, confirm the intended working directory before proceeding.
+
+---
+
+## Large Implementations
+
+When asked to build a full multi-file system (e.g., multi-agent backend, full-stack app), break the work into phases and confirm with the user before proceeding past the first working milestone. Prioritize getting a minimal running version first, then iterate. Always run the code after each phase to catch runtime errors early.
+
+---
+
 ## Output Standards
 
 1. **Cornell-style numbering:** 1, 1.1, 1.1.1 for outputs longer than ~10 lines
