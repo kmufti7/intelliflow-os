@@ -24,6 +24,11 @@ This index is the fastest way to review enterprise readiness signals.
 | [ETHICS.md](ETHICS.md) | Responsible AI considerations |
 | [CHANGELOG.md](CHANGELOG.md) | Version history |
 
+## Enterprise Evidence Pack
+| Document | Purpose |
+|----------|---------|
+| [SECURITY_PRIVACY_OVERVIEW.md](docs/enterprise/SECURITY_PRIVACY_OVERVIEW.md) | Security & privacy posture: data residency, compliance alignment, customer responsibility model |
+
 ## Strategy Documents
 | Document | Purpose |
 |----------|---------|
