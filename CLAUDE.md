@@ -185,6 +185,39 @@ Run `python scripts/verify_cascade.py` after every cascade. It checks:
 
 ---
 
+## Mandatory Cascade Check
+
+After ANY commit (not just /add-feature), run `/cascade-check` before considering the task complete.
+
+This includes:
+- New files (LICENSE, CONTRIBUTING.md, docs, etc.)
+- README updates
+- Doc additions or edits
+- Structural changes
+- Metric changes
+- Architecture changes
+
+**Workflow:**
+1. Make the requested change
+2. Commit and push
+3. Run `/cascade-check`
+4. Report findings to user
+5. Wait for exact content to update affected files
+6. Do NOT guess at content — user (via Claude chat) provides exact text
+
+**Diagram Updates:**
+If changes affect architecture, data flow, or module structure, flag that ARCHITECTURE.md Mermaid diagrams may need updating. The 6 diagrams are:
+1. Platform Overview
+2. SupportFlow Architecture
+3. CareFlow Architecture
+4. Data Flow
+5. Cost Optimization Layers
+6. Chaos Mode Flow
+
+Do not modify diagrams without explicit content from user.
+
+---
+
 ## Project Context
 
 This workspace primarily uses Python. Always use Python 3.10+ type hint syntax (e.g., `X | None` instead of `Optional[X]`, `list[str]` instead of `List[str]`) unless explicitly targeting Python 3.9 or earlier. When writing Python, ensure compatibility with the user's runtime version.
