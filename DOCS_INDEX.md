@@ -3,6 +3,12 @@
 This repo is a governance-first AI platform reference implementation for regulated industries.
 This index is the fastest way to review enterprise readiness signals.
 
+## Overview
+
+| Document | Purpose |
+|----------|---------|
+| [PRODUCT_BRIEF.md](PRODUCT_BRIEF.md) | 1-page buyer-facing summary: problem, solution, capabilities, deployment |
+
 ## Core Artifacts
 | Document | Purpose |
 |----------|---------|

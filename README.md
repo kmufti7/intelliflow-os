@@ -4,6 +4,8 @@
 
 A modular AI platform demonstrating enterprise patterns: audit trails, policy-grounded responses, deterministic reasoning, and PHI-aware data residency.
 
+> **Quick overview:** See [Product Brief](PRODUCT_BRIEF.md) for a 1-page summary.
+
 ---
 
 ## Platform Architecture
