@@ -13,6 +13,8 @@ This document explains the technology choices made for IntelliFlow OS and the ra
 
 **Key Factor:** Azure OpenAI offers the same GPT-4 models with enterprise compliance features (BAA, data residency, private endpoints). For regulated industries, this matters.
 
+Designed for Azure OpenAI Service (BAA-eligible) to meet enterprise compliance requirements for regulated industries.
+
 ---
 
 ## Vector Database

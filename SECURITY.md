@@ -3,6 +3,8 @@
 This is a portfolio reference implementation. It demonstrates security and governance patterns for LLM systems.
 It is not a production-hardened system and is not marketed as certified compliant.
 
+Designed for Azure OpenAI Service (BAA-eligible) to meet enterprise compliance requirements for regulated industries.
+
 ## Threat Model (Lightweight)
 
 **Primary threats:**
@@ -42,6 +44,18 @@ Reference: [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top
 - No production PHI required. Use synthetic data for demos.
 - Do not send free-text patient notes to external vector stores.
 - Keep cloud vector retrieval queries de-identified and concept-based only.
+
+## Deployment Considerations
+
+IntelliFlow OS provides governance-ready patterns. Production deployment requires customer-owned infrastructure and certifications:
+
+- **SOC 2 Certification:** Customer responsibility. The platform provides structured audit logging, event schemas, and queryable governance trails that map directly to SOC 2 evidence requirements.
+- **Penetration Testing:** Customer responsibility. The platform follows OWASP LLM Top 10 patterns (see mapping above) and provides defense-in-depth controls for prompt injection, output handling, and data residency.
+- **BAA Execution:** Customer responsibility with their Azure OpenAI tenant. The platform is designed for Azure OpenAI Service, which offers BAA-eligible endpoints for HIPAA-regulated workloads.
+- **Network Security:** Customer responsibility. The platform supports VPC deployment with private endpoints for both LLM inference (Azure OpenAI) and vector storage (Pinecone).
+- **Data Classification:** Customer responsibility. The platform demonstrates PHI-aware separation patterns (local FAISS for PHI, cloud Pinecone for public guidelines) that customers extend to their data governance policies.
+
+---
 
 ## Vulnerability Reporting
 This is a portfolio reference implementation. Please report architectural gaps via GitHub Issues.

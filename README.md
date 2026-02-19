@@ -42,6 +42,14 @@ flowchart TD
 
 ---
 
+## Validation
+
+> "Built by someone who understands the brutal reality of deploying software in a regulated enterprise... mature, practical architecture for handling risk in production AI."
+>
+> — **Saad Subhan**, Software Developer | Tech Lead at a Top 10 US Bank
+
+---
+
 ## Demo Videos
 
 | Module | Description | Demo |
@@ -159,7 +167,7 @@ python care_app.py --mode=enterprise
 | Component | Technology |
 |-----------|------------|
 | UI | Streamlit |
-| LLM | OpenAI GPT-4o-mini |
+| LLM | Azure OpenAI GPT-4o-mini |
 | Vector DB (local) | FAISS |
 | Vector DB (cloud) | Pinecone |
 | Embeddings | text-embedding-3-small |

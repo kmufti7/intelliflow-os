@@ -149,3 +149,4 @@ flowchart LR
 - This is a reference implementation optimized for auditability and interview-ready proof.
 - Deterministic logic is used where correctness matters.
 - LLM translates and formats; code decides.
+- Designed for Azure OpenAI Service (BAA-eligible) to meet enterprise compliance requirements for regulated industries.
