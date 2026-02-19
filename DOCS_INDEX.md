@@ -34,6 +34,12 @@ This index is the fastest way to review enterprise readiness signals.
 |-----------|------------|
 | intelliflow-core | [intelliflow-core](https://github.com/kmufti7/intelliflow-core) |
 
+## Project Governance
+| Document | Purpose |
+|----------|---------|
+| [LICENSE](LICENSE) | Apache License 2.0 |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Contribution guidelines |
+
 ## Demos
 | Module | Video |
 |--------|-------|
