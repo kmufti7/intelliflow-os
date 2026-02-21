@@ -28,6 +28,10 @@ This index is the fastest way to review enterprise readiness signals.
 | Document | Purpose |
 |----------|---------|
 | [SECURITY_PRIVACY_OVERVIEW.md](docs/enterprise/SECURITY_PRIVACY_OVERVIEW.md) | Security & privacy posture: data residency, compliance alignment, customer responsibility model |
+| [SLO_SLA_STATEMENT.md](docs/enterprise/SLO_SLA_STATEMENT.md) | Service-level objectives, performance targets, customer responsibilities, measurement & reporting |
+| [RELEASE_NOTES_VERSIONING.md](docs/enterprise/RELEASE_NOTES_VERSIONING.md) | Versioning policy, release cadence, deprecation process, customer communication |
+| [PRODUCT_ROADMAP.md](docs/enterprise/PRODUCT_ROADMAP.md) | Product direction: current release, near-term priorities, strategic vision, guiding principles |
+| [ADR_MANAGED_INFERENCE_VS_SELF_HOSTED.md](docs/enterprise/ADR_MANAGED_INFERENCE_VS_SELF_HOSTED.md) | Architecture decision record: managed inference (Azure OpenAI, AWS Bedrock) vs. self-hosted (vLLM, Triton), tradeoff analysis, FinOps implications |
 
 ## Strategy Documents
 | Document | Purpose |

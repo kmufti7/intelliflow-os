@@ -19,7 +19,7 @@ These facts are verified. Do NOT contradict them in any output.
 | SupportFlow tests | 13 | CI |
 | CareFlow tests | 84 (81 original + 3 integration) | CI |
 | AI-generated tests | 35 (from ai_test_generator.py) | Test run |
-| Enterprise docs | 11 | DOCS_INDEX.md |
+| Enterprise docs | 16 | DOCS_INDEX.md |
 | Verification checks | 59 | verify_enterprise_docs.py |
 | Build time (actual) | ~7 hours (~4 SF, ~3 CF) | Kamil's report |
 | Build time (estimated) | 29-48 hours | Architect estimate |
@@ -120,7 +120,7 @@ Every **built** story must appear substantively in all 8 portfolio_writeup files
 | F | "Tests That Lie" | Unit tests validated components, not integration. Added 3 integration tests mirroring real user entry points. Principle: at least one test per feature must hit the real entry point. | ✅ Built |
 | G | Chaos as Resilience | Both modules: sidebar toggle, failure injection, graceful fallback, audit-logged. Demo-able in 3 minutes. Enterprise buyer question: "what happens when your vector store goes down?" | ✅ Built |
 | H | FHIR Dual-Mode Ingestion | Legacy clinic notes + FHIR R4 Bundles. Adapter pattern: both paths → same extraction output. LOINC 4548-4. CMS mandate context. | ✅ Built |
-| I | Enterprise Evidence Pack | 11 docs (NIST AI RMF, OWASP LLM Top 10, EU AI Act, ethics, observability, etc.). 59 automated verification checks. Documentation drift prevention. | ✅ Built |
+| I | Enterprise Evidence Pack | 16 docs (NIST AI RMF, OWASP LLM Top 10, EU AI Act, ethics, observability, security & privacy overview, SLO/SLA statement, release notes & versioning, product roadmap, managed inference ADR, etc.). 59 automated verification checks. Documentation drift prevention. | ✅ Built |
 | J | AI Test Generator | Reads 3 Pydantic schemas → generates 35 edge-case pytest tests. Schema-aware. "LLM translates, code decides" pattern. Location: IntelliFlow_OS/tools/ai_test_generator.py | ✅ Built |
 | K | NL Log Query | Natural language → SQL WHERE clause. LLM translates, Python validates (column whitelist, blocked keywords, string stripping), code executes against SQLite. 15 tests. Location: IntelliFlow_OS/tools/nl_log_query.py | ✅ Built |
 | L | Scaffold Generator | Developer describes intent → platform-compliant Python boilerplate. Reads schemas, injects governance patterns. ast.parse() validation. 14 tests. Location: IntelliFlow_OS/tools/scaffold_generator.py | ✅ Built |

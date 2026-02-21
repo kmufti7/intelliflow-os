@@ -5,8 +5,12 @@ Checks all enterprise docs in intelliflow-os for existence,
 non-empty content, and required sections/keywords.
 """
 
+import glob
 import os
+import re
 import sys
+
+import yaml
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -116,6 +120,41 @@ if content:
     for doc in expected_links:
         link = f"]({doc})"
         check_contains("DOCS_INDEX.md", content, link, label=f"link to {doc}")
+
+
+# --- Enterprise doc count consistency across all .md files ---
+config_path = os.path.join(REPO_ROOT, "portfolio_config.yaml")
+with open(config_path, "r", encoding="utf-8") as f:
+    config = yaml.safe_load(f)
+expected_count = config["metrics"]["enterprise_docs"]
+
+# Pattern: integer immediately adjacent to "Enterprise Evidence Pack"
+# Matches: "16 Enterprise Evidence Pack", "Enterprise Evidence Pack | 16",
+#           "Enterprise Evidence Pack** | 16"
+count_pattern = re.compile(
+    r"(\d+)\s*(?:documents?\s+mapped\s+to.*)?Enterprise Evidence Pack"
+    r"|Enterprise Evidence Pack[^|]*\|\s*(\d+)"
+)
+
+scan_dirs = [
+    os.path.join(REPO_ROOT, "docs", "enterprise"),
+    os.path.join(REPO_ROOT, "portfolio_writeup"),
+]
+for scan_dir in scan_dirs:
+    if not os.path.isdir(scan_dir):
+        continue
+    for md_path in sorted(glob.glob(os.path.join(scan_dir, "*.md"))):
+        rel = os.path.relpath(md_path, REPO_ROOT)
+        with open(md_path, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        for line_num, line in enumerate(lines, start=1):
+            for m in count_pattern.finditer(line):
+                found = int(m.group(1) or m.group(2))
+                check(
+                    f"{rel}:{line_num} Enterprise Evidence Pack count = {expected_count}",
+                    found == expected_count,
+                    f"found {found}, expected {expected_count}" if found != expected_count else "",
+                )
 
 
 # --- Report ---

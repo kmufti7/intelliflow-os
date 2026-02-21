@@ -14,6 +14,8 @@ Checks:
 9. README.md covers all built stories
 10. README.md has no forbidden build time content
 11. README.md has Mermaid diagram and links to ARCHITECTURE.md
+12. Enterprise doc count consistent across config and filesystem
+13. CLAUDE.md Truth Table enterprise_docs matches portfolio_config.yaml
 """
 
 import io
@@ -57,7 +59,7 @@ STORY_TERMS = {
     "F": ["tests that lie", "integration test", "12.*unit", "3 integration", "real entry point"],
     "G": ["chaos mode", "resilience", "failure injection", "graceful", "audit"],
     "H": ["FHIR", "dual-mode", "LOINC", "4548-4", "adapter pattern", "Bundle"],
-    "I": ["enterprise", "11 docs", "59.*checks", "NIST", "OWASP", "verify_enterprise"],
+    "I": ["enterprise", "16 docs", "59.*checks", "NIST", "OWASP", "verify_enterprise"],
     "J": ["AI test generator", "schema-aware", "35.*generated", "Pydantic.*test", "edge-case"],
     "K": ["NL log query", "natural language.*log", "SQL WHERE"],
     "L": ["scaffold generator", "boilerplate", "ast.parse"],
@@ -395,6 +397,68 @@ def check_readme_architecture_sync():
     return issues
 
 
+ENTERPRISE_DIR = REPO_ROOT / "docs" / "enterprise"
+
+
+def check_enterprise_doc_count(metrics):
+    """Check that .md files in docs/enterprise/ match enterprise_docs config value."""
+    issues = []
+    expected = metrics.get("enterprise_docs")
+    if expected is None:
+        issues.append("portfolio_config.yaml missing 'enterprise_docs' key")
+        return issues
+
+    if not ENTERPRISE_DIR.exists():
+        issues.append(f"Directory {ENTERPRISE_DIR.relative_to(REPO_ROOT)} does not exist")
+        return issues
+
+    md_files = sorted(ENTERPRISE_DIR.glob("*.md"))
+    # Enterprise doc count = Core Artifacts (11 in DOCS_INDEX) + docs/enterprise/ files
+    core_artifact_count = expected - len(md_files)
+    actual_total = core_artifact_count + len(md_files)
+
+    if actual_total != expected:
+        issues.append(
+            f"Enterprise doc count mismatch: portfolio_config.yaml says {expected}, "
+            f"but docs/enterprise/ has {len(md_files)} file(s) "
+            f"(expected {expected - core_artifact_count}). "
+            f"Update portfolio_config.yaml or add/remove docs."
+        )
+
+    # Also verify at least 1 file exists in docs/enterprise/
+    if len(md_files) == 0:
+        issues.append("docs/enterprise/ has no .md files — expected at least 1")
+
+    return issues
+
+
+def check_claude_md_enterprise_docs(metrics):
+    """Check CLAUDE.md Truth Table 'Enterprise docs' matches portfolio_config.yaml."""
+    issues = []
+    expected = metrics.get("enterprise_docs")
+    if expected is None:
+        issues.append("portfolio_config.yaml missing 'enterprise_docs' key")
+        return issues
+
+    content = read_file(CLAUDE_MD)
+    # Match the Truth Table row: | Enterprise docs | <number> | ...
+    match = re.search(
+        r"\|\s*Enterprise docs\s*\|\s*(\d+)\s*\|", content
+    )
+    if not match:
+        issues.append("CLAUDE.md Truth Table has no 'Enterprise docs' row")
+        return issues
+
+    claude_value = int(match.group(1))
+    if claude_value != expected:
+        issues.append(
+            f"CLAUDE.md Truth Table says Enterprise docs = {claude_value}, "
+            f"but portfolio_config.yaml says {expected}. Update CLAUDE.md."
+        )
+
+    return issues
+
+
 def main():
     print("=" * 60)
     print("VERIFY CASCADE — IntelliFlow OS Consistency Check")
@@ -538,6 +602,30 @@ def main():
     else:
         checks_passed += 1
         print(f"  ✅ README.md has Mermaid diagram and ARCHITECTURE.md reference")
+
+    # 12. Enterprise doc count consistent
+    print("\n📂 Checking enterprise doc count consistent across config and filesystem...")
+    checks_run += 1
+    issues = check_enterprise_doc_count(metrics)
+    if issues:
+        all_issues.extend(issues)
+        for i in issues:
+            print(f"  ❌ {i}")
+    else:
+        checks_passed += 1
+        print(f"  ✅ Enterprise doc count consistent across config and filesystem")
+
+    # 13. CLAUDE.md Truth Table enterprise_docs matches config
+    print("\n📋 Checking CLAUDE.md Truth Table enterprise_docs matches portfolio_config.yaml...")
+    checks_run += 1
+    issues = check_claude_md_enterprise_docs(metrics)
+    if issues:
+        all_issues.extend(issues)
+        for i in issues:
+            print(f"  ❌ {i}")
+    else:
+        checks_passed += 1
+        print(f"  ✅ CLAUDE.md Truth Table enterprise_docs matches portfolio_config.yaml")
 
     # Summary
     print("\n" + "=" * 60)
