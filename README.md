@@ -2,7 +2,7 @@
 
 **Governance-first AI platform for regulated industries**
 
-A modular AI platform demonstrating enterprise patterns: audit trails, policy-grounded responses, deterministic reasoning, and PHI-aware data residency.
+AI integration middleware enforcing audit trails, deterministic reasoning, and PHI-aware data residency across regulated industry workflows.
 
 > **Quick overview:** See [Product Brief](PRODUCT_BRIEF.md) for a 1-page summary.
 
@@ -12,30 +12,52 @@ A modular AI platform demonstrating enterprise patterns: audit trails, policy-gr
 
 ```mermaid
 flowchart TD
-  CORE[intelliflow-core<br/>Platform SDK · 32 tests]
-
-  subgraph Applications
-    SF[SupportFlow<br/>Banking · 13 tests]
-    CF[CareFlow<br/>Healthcare · 84 tests]
+  subgraph Clients["Client Applications"]
+    WEB[Web App]
+    API[API Gateway]
+    EHR[EHR / Core Banking]
   end
 
-  subgraph Developer Tools
-    TG[AI Test Generator · 35 tests]
-    NL[NL Log Query · 15 tests]
-    SG[Scaffold Generator · 14 tests]
+  subgraph VPC["Enterprise VPC"]
+    RR[Request Router<br/>Deterministic]
+    GW[Governance Wrapper<br/>Pydantic Validation · Audit Logging]
+
+    subgraph Modules["Domain Modules"]
+      SF[SupportFlow<br/>Banking]
+      CF[CareFlow<br/>Healthcare]
+      CLF[ClaimsFlow<br/>Insurance]
+    end
+
+    CORE[intelliflow-core v2<br/>LangGraph Engine · Kill-Switch · MCP Registry]
+    FAISS[(FAISS<br/>PHI — Never Leaves VPC)]
+
+    subgraph PE["Private Endpoints"]
+      AZ_PE[Azure Private Endpoint]
+      AWS_PE[AWS Bedrock PrivateLink]
+    end
   end
 
-  CORE --> SF
-  CORE --> CF
-  CORE --> TG
-  CORE --> NL
-  CORE --> SG
-
-  subgraph Data Residency
-    FAISS[(FAISS Local<br/>Patient Notes — PHI)]
-    PIN[(Pinecone Cloud<br/>Medical Guidelines)]
+  subgraph LLMs["LLM Providers — Outside VPC"]
+    AZ[Azure OpenAI]
+    BR[AWS Bedrock]
   end
 
+  PIN[(Pinecone<br/>Guidelines Only · No PHI)]
+
+  WEB --> RR
+  API --> RR
+  EHR --> RR
+  RR --> GW
+  GW --> SF
+  GW --> CF
+  GW --> CLF
+  SF --> CORE
+  CF --> CORE
+  CLF --> CORE
+  CORE --> AZ_PE
+  CORE --> AWS_PE
+  AZ_PE --> AZ
+  AWS_PE --> BR
   CF --> FAISS
   CF --> PIN
 ```
@@ -226,7 +248,7 @@ streamlit run care_app.py
 
 ## Disclaimer
 
-This is a **portfolio reference implementation** demonstrating governance-first AI patterns with synthetic data.
+This is a **reference implementation** demonstrating governance-first AI patterns with synthetic data.
 
 - **Not a certified medical device**
 - **Not a production HIPAA-compliant system**
