@@ -99,7 +99,7 @@ Transparency about limitations is part of the governance posture:
 - **Not independently penetration tested.** The platform follows OWASP LLM Top 10 patterns and provides defense-in-depth controls — but formal pen testing is a customer responsibility.
 - **Not a BAA counterparty.** The operator executes BAAs directly with Azure/Microsoft. IntelliFlow OS is a software platform, not a covered entity or business associate.
 - **HIPAA-aligned means design patterns — not legal compliance certification.** The architecture demonstrates how to handle PHI responsibly. Legal compliance depends on the operator's full deployment environment, policies, and certifications.
-- **No production PHI in demos.** All demonstrations use synthetic patient data. Real PHI requires customer-provisioned infrastructure with appropriate safeguards.
+- **No production PHI in reference implementation environments.** All demonstrations use synthetic patient data. Real PHI requires customer-provisioned infrastructure with appropriate safeguards.
 
 ---
 

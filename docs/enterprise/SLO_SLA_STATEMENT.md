@@ -97,7 +97,7 @@ IntelliFlow OS provides the governance architecture. The operator is responsible
 
 ### Synthetic Data Only
 
-All platform demonstrations and test suites use synthetic patient data. No production PHI is included in any repository, test fixture, or demo environment. Operators deploying with real PHI must provision their own infrastructure with appropriate safeguards, encryption, and access controls.
+All platform demonstrations and test suites use synthetic patient data. No production PHI is included in any repository, test fixture, or reference implementation environment. Operators deploying with real PHI must provision their own infrastructure with appropriate safeguards, encryption, and access controls.
 
 ---
 

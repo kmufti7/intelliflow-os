@@ -41,7 +41,7 @@ Reference: [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top
 | **LLM10** | Model Theft | N/A | No proprietary model weights hosted. |
 
 ## Practical Security Checklist
-- No production PHI required. Use synthetic data for demos.
+- No production PHI required. Use synthetic data for reference implementation testing.
 - Do not send free-text patient notes to external vector stores.
 - Keep cloud vector retrieval queries de-identified and concept-based only.
 

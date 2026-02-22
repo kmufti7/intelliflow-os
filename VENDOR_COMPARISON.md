@@ -9,7 +9,7 @@ This document explains the technology choices made for IntelliFlow OS and the ra
 | Azure OpenAI Service | Yes | Enterprise compliance (BAA available for HIPAA), data residency controls, same models as OpenAI |
 | OpenAI Direct API | No | No Business Associate Agreement (BAA) for healthcare use cases |
 | Anthropic Claude | No | Strong alternative, but Azure relationship already established |
-| Open Source (Llama, Mistral) | No | Self-hosting complexity, less suitable for portfolio demo |
+| Open Source (Llama, Mistral) | No | Self-hosting complexity, less suitable for production-grade reference architecture |
 
 **Key Factor:** Azure OpenAI offers the same GPT-4 models with enterprise compliance features (BAA, data residency, private endpoints). For regulated industries, this matters.
 
@@ -41,8 +41,8 @@ Designed for Azure OpenAI Service (BAA-eligible) to meet enterprise compliance r
 
 | Option | Chosen | Rationale |
 |--------|--------|-----------|
-| SQLite | Yes | Zero setup, file-based, sufficient for demo scale, easy to inspect |
-| PostgreSQL | No | Overkill for portfolio demo, adds deployment complexity |
+| SQLite | Yes | Zero setup, file-based, sufficient for reference implementation scale, easy to inspect |
+| PostgreSQL | No | Overkill for production-grade reference architecture, adds deployment complexity |
 | MongoDB | No | Document store not needed for structured audit logs |
 
 **Note:** SQLite is intentionally simple. Production deployment would likely use PostgreSQL with proper connection pooling.
@@ -59,7 +59,7 @@ Designed for Azure OpenAI Service (BAA-eligible) to meet enterprise compliance r
 
 | Model | Why Not |
 |-------|---------|
-| gpt-4o | Higher cost, not needed for demo-scale tasks |
+| gpt-4o | Higher cost, not needed for reference implementation workloads |
 | gpt-3.5-turbo | Lower quality, marginal cost savings |
 
 **Future Consideration:** Tiered model selection — use smaller models for classification, larger for complex reasoning.
@@ -80,9 +80,9 @@ Designed for Azure OpenAI Service (BAA-eligible) to meet enterprise compliance r
 
 | Option | Chosen | Rationale |
 |--------|--------|-----------|
-| Streamlit | Yes | Rapid prototyping, built-in components, good for demos |
+| Streamlit | Yes | Rapid prototyping, built-in components, suitable for reference implementations |
 | Gradio | No | Similar capability, less familiar |
-| React | No | Overkill for portfolio demo, adds frontend complexity |
+| React | No | Overkill for production-grade reference architecture, adds frontend complexity |
 
 ---
 
@@ -103,7 +103,7 @@ Designed for Azure OpenAI Service (BAA-eligible) to meet enterprise compliance r
 | LLM Provider | Azure OpenAI | Enterprise compliance (BAA) |
 | Vector DB (PHI) | FAISS | Local-only, no network transmission |
 | Vector DB (Public) | Pinecone | Managed, scalable |
-| Database | SQLite | Simplicity for demo scope |
+| Database | SQLite | Simplicity for reference implementation scope |
 | Model | gpt-4o-mini | Cost-effective |
 | Embeddings | text-embedding-3-small | Good quality, low cost |
 | UI | Streamlit | Rapid prototyping |

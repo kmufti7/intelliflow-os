@@ -72,7 +72,7 @@ This separates **decision logic** (deterministic, auditable) from **communicatio
 |-----------|----------------|
 | Minimize data collection | Only collect what's needed for the task |
 | PHI stays local | Patient data never transmitted to cloud services |
-| Synthetic data for demos | No real patient data used in development or demonstration |
+| Synthetic data for reference implementation testing | No real patient data used in development or demonstration |
 | Audit trail transparency | Users can inspect what data was processed and how |
 
 ---
@@ -88,7 +88,7 @@ This separates **decision logic** (deterministic, auditable) from **communicatio
 
 ### SupportFlow
 
-- **Not production-hardened.** Demo-grade security and scalability.
+- **Not production-hardened.** Production-grade security and scalability.
 - **Policies are illustrative.** Real deployment would require integration with actual bank policies.
 
 ---

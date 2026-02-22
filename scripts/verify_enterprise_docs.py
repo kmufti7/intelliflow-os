@@ -157,6 +157,121 @@ for scan_dir in scan_dirs:
                 )
 
 
+# --- Forbidden phrases in enterprise docs ---
+# Phrases that must not appear in any enterprise documentation.
+# "demo" is checked as a standalone word (noun usage), excluding verb forms
+# like "demonstrate", "demonstrates", "demonstrating", "demo-able".
+FORBIDDEN_PHRASES = [
+    "side project",
+    "portfolio project",
+    "personal project",
+    "hobby",
+    "AgentFlow",
+    "standalone app",
+    "standalone application",
+    "HIPAA compliant",
+    "HIPAA certified",
+    "NIST certified",
+    "NIST compliant",
+    "EU AI Act compliant",
+]
+
+# "demo" as noun: match word-boundary "demo" not followed by verb suffixes
+# or preceded by "demo-able". Catches: demo, demos, demo-grade, demo-scale,
+# demo scope, demo environment, portfolio demo, Demo usage.
+DEMO_NOUN_PATTERN = re.compile(
+    r"\bdemos?\b(?!nstrat|[-]able)", re.IGNORECASE
+)
+
+# "proof of concept" only flagged when NOT near "production-grade"
+POC_PATTERN = re.compile(r"\bproof of concept\b", re.IGNORECASE)
+
+enterprise_root_docs = [
+    "COST_MODEL.md",
+    "SECURITY.md",
+    "GOVERNANCE.md",
+    "ETHICS.md",
+    "OBSERVABILITY.md",
+    "VENDOR_COMPARISON.md",
+    "TEST_STRATEGY.md",
+    "DATA_DICTIONARY.md",
+    "DEVELOPER_EXPERIENCE_STRATEGY.md",
+    "ARCHITECTURE.md",
+]
+
+forbidden_files = []
+# Collect enterprise root docs
+for doc in enterprise_root_docs:
+    full = os.path.join(REPO_ROOT, doc)
+    if os.path.isfile(full):
+        forbidden_files.append(full)
+# Collect docs/enterprise/*.md
+ent_dir = os.path.join(REPO_ROOT, "docs", "enterprise")
+if os.path.isdir(ent_dir):
+    forbidden_files.extend(sorted(glob.glob(os.path.join(ent_dir, "*.md"))))
+
+forbidden_violations = 0
+for fpath in forbidden_files:
+    rel = os.path.relpath(fpath, REPO_ROOT)
+    with open(fpath, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+    for line_num, line in enumerate(lines, start=1):
+        line_lower = line.lower()
+        # Check literal forbidden phrases
+        for phrase in FORBIDDEN_PHRASES:
+            if phrase.lower() in line_lower:
+                check(
+                    f'{rel}:{line_num} no forbidden phrase "{phrase}"',
+                    False,
+                    f'found "{phrase}"',
+                )
+                forbidden_violations += 1
+        # Check "demo" as noun
+        if DEMO_NOUN_PATTERN.search(line):
+            check(
+                f'{rel}:{line_num} no "demo" as noun',
+                False,
+                f"found: {line.strip()[:80]}",
+            )
+            forbidden_violations += 1
+        # Check "proof of concept" without "production-grade"
+        if POC_PATTERN.search(line):
+            if "production-grade" not in line_lower:
+                check(
+                    f'{rel}:{line_num} no bare "proof of concept"',
+                    False,
+                    f"found: {line.strip()[:80]}",
+                )
+                forbidden_violations += 1
+
+if forbidden_violations == 0:
+    check("Enterprise docs: no forbidden phrases", True)
+
+
+# --- Test count consistency in enterprise/strategy docs ---
+expected_tests = config["metrics"]["total_tests"]
+test_count_files = ["DEVELOPER_EXPERIENCE_STRATEGY.md"]
+# Also scan docs/enterprise/ for any file mentioning test counts
+test_count_pattern = re.compile(
+    r"\b(\d+)\s+tests?\s+(?:already\s+)?passing\b"
+)
+
+for doc in test_count_files:
+    fpath = os.path.join(REPO_ROOT, doc)
+    if not os.path.isfile(fpath):
+        continue
+    with open(fpath, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+    for line_num, line in enumerate(lines, start=1):
+        for m in test_count_pattern.finditer(line):
+            found = int(m.group(1))
+            check(
+                f"{doc}:{line_num} test count = {expected_tests}",
+                found == expected_tests,
+                f"found {found}, expected {expected_tests}" if found != expected_tests else "",
+            )
+
+
 # --- Report ---
 print("=" * 60)
 print("  IntelliFlow OS — Enterprise Docs Verification")

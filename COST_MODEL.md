@@ -22,7 +22,7 @@ Values are illustrative scenarios based on Azure OpenAI gpt-4o-mini pricing at t
 
 | Scenario | Interactions/Month | Est. Cost/Month | Notes |
 |----------|-------------------|-----------------|-------|
-| Demo usage | 100 | < $1 | Minimal testing |
+| Reference implementation usage | 100 | < $1 | Minimal testing |
 | Pilot (10K) | 10,000 | $10-30 | Depends on retrieval payload size |
 | Scale (100K) | 100,000 | $100-300 | Volume discounts may apply |
 

@@ -115,8 +115,8 @@ After Tier 2 establishes trust, expand to Tier 1 (onboarding) if hiring velocity
 
 ---
 
-## 6. Proof of Concept
+## 6. Production-Grade Proof of Concept
 
 IntelliFlow OS implements Tier 2: an AI-powered test generator (`tools/ai_test_generator.py`) that reads Pydantic schemas from the shared SDK (`intelliflow-core/intelliflow_core/contracts.py`) and produces edge-case pytest suites. The generator analyzes field types, constraints (such as `ge=0` on token counts), and optionality to produce tests covering valid construction, missing required fields, boundary conditions, and optional field defaults.
 
-This validates the approach at minimal risk. Generated tests either pass or fail — there is no ambiguity about whether the output is correct. The 129 tests already passing across the IntelliFlow OS platform provide the baseline; the generator extends coverage to schema edge cases that manual test writing typically misses. The tool analyzes three shared schemas (`AuditEventSchema`, `CostTrackingSchema`, `GovernanceLogEntry`) and generates tests for required field enforcement, numeric boundary conditions, optional field defaults, and type validation — the categories of edge cases most frequently skipped under deadline pressure.
+This validates the approach at minimal risk. Generated tests either pass or fail — there is no ambiguity about whether the output is correct. The 193 tests already passing across the IntelliFlow OS platform provide the baseline; the generator extends coverage to schema edge cases that manual test writing typically misses. The tool analyzes three shared schemas (`AuditEventSchema`, `CostTrackingSchema`, `GovernanceLogEntry`) and generates tests for required field enforcement, numeric boundary conditions, optional field defaults, and type validation — the categories of edge cases most frequently skipped under deadline pressure.
