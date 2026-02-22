@@ -33,6 +33,7 @@ This index is the fastest way to review enterprise readiness signals.
 | [PRODUCT_ROADMAP.md](docs/enterprise/PRODUCT_ROADMAP.md) | Product direction: current release, near-term priorities, strategic vision, guiding principles |
 | [ADR_MANAGED_INFERENCE_VS_SELF_HOSTED.md](docs/enterprise/ADR_MANAGED_INFERENCE_VS_SELF_HOSTED.md) | Architecture decision record: managed inference (Azure OpenAI, AWS Bedrock) vs. self-hosted (vLLM, Triton), tradeoff analysis, FinOps implications |
 | [ADR_DETERMINISTIC_V1_VS_AGENTIC_V2.md](docs/enterprise/ADR_DETERMINISTIC_V1_VS_AGENTIC_V2.md) | Architecture decision record: deterministic v1 vs. agentic v2, regulatory defensibility, kill-switch mandate, SR 11-7 alignment |
+| [SR_11_7_MODEL_RISK_MANAGEMENT.md](docs/enterprise/SR_11_7_MODEL_RISK_MANAGEMENT.md) | SR 11-7 model risk management alignment: requirement mapping, module-specific controls, kill-switch mandate, deploying institution responsibilities |
 
 ## Strategy Documents
 | Document | Purpose |
