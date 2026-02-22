@@ -68,7 +68,7 @@ Each release includes:
 | **SDK** | intelliflow-core — pip-installable shared governance SDK with 3 Pydantic contracts |
 | **Stories** | 12 stories (A–L) built and cascaded |
 | **Tests** | 193 total (158 hand-written + 35 AI-generated) across 4 repositories |
-| **Enterprise Evidence Pack** | 16 documents mapped to NIST AI RMF, OWASP LLM Top 10, EU AI Act record-keeping |
+| **Enterprise Evidence Pack** | 17 documents mapped to NIST AI RMF, OWASP LLM Top 10, EU AI Act record-keeping |
 | **Developer Tools** | 3 tools (AI test generator, NL log query, scaffold generator) |
 | **Verification** | 59 automated checks (enterprise docs) + 13-check cascade verification |
 | **Compliance Alignment** | HIPAA-aligned design patterns, NIST AI RMF mapped, OWASP LLM Top 10 mapped |

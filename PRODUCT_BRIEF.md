@@ -46,7 +46,7 @@ IntelliFlow OS is a governed agent runtime where **LLMs extract and explain, but
 - **Full Audit Trail:** Every decision logged with evidence, cost, and reasoning via Pydantic-enforced schemas.
 - **Cost Controls:** 5-layer optimization (caching, model tiering, regex-first extraction, session caps, batch processing).
 - **Chaos Engineering:** Built-in failure injection to prove graceful degradation before production.
-- **Enterprise Evidence Pack:** 16 docs mapped to NIST AI RMF, OWASP LLM Top 10, EU AI Act record-keeping.
+- **Enterprise Evidence Pack:** 17 docs mapped to NIST AI RMF, OWASP LLM Top 10, EU AI Act record-keeping.
 
 ---
 

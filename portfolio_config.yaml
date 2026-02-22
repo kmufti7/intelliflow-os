@@ -17,7 +17,7 @@ metrics:
   chaos_tests_total: 28
 
   # Enterprise docs
-  enterprise_docs: 16
+  enterprise_docs: 17
   verification_checks: 59
 
   # Build metrics
