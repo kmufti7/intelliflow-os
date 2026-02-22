@@ -16,6 +16,7 @@ Checks:
 11. README.md has Mermaid diagram and links to ARCHITECTURE.md
 12. Enterprise doc count consistent across config and filesystem
 13. CLAUDE.md Truth Table enterprise_docs matches portfolio_config.yaml
+14. ARCHITECTURE.md contains required middleware architecture terms
 """
 
 import io
@@ -459,6 +460,32 @@ def check_claude_md_enterprise_docs(metrics):
     return issues
 
 
+ARCHITECTURE_REQUIRED_TERMS = [
+    "Enterprise VPC",
+    "Private Endpoint",
+    "ClaimsFlow",
+    "intelliflow-core v2",
+    "Kill-Switch",
+]
+
+
+def check_architecture_required_terms():
+    """Check ARCHITECTURE.md contains required middleware architecture terms."""
+    issues = []
+    if not ARCHITECTURE_MD.exists():
+        issues.append("ARCHITECTURE.md does not exist")
+        return issues
+
+    content = read_file(ARCHITECTURE_MD)
+    content_lower = content.lower()
+
+    for term in ARCHITECTURE_REQUIRED_TERMS:
+        if term.lower() not in content_lower:
+            issues.append(f"ARCHITECTURE.md missing required term: '{term}'")
+
+    return issues
+
+
 def main():
     print("=" * 60)
     print("VERIFY CASCADE — IntelliFlow OS Consistency Check")
@@ -626,6 +653,18 @@ def main():
     else:
         checks_passed += 1
         print(f"  ✅ CLAUDE.md Truth Table enterprise_docs matches portfolio_config.yaml")
+
+    # 14. ARCHITECTURE.md required middleware terms
+    print("\n📐 Checking ARCHITECTURE.md required middleware terms...")
+    checks_run += 1
+    issues = check_architecture_required_terms()
+    if issues:
+        all_issues.extend(issues)
+        for i in issues:
+            print(f"  ❌ {i}")
+    else:
+        checks_passed += 1
+        print(f"  ✅ ARCHITECTURE.md contains all required middleware terms")
 
     # Summary
     print("\n" + "=" * 60)

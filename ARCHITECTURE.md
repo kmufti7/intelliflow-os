@@ -53,34 +53,53 @@ flowchart TD
   CF --> PIN
 ```
 
-## Platform Shape
+## Module Flow
 ```mermaid
-flowchart LR
-  A[intelliflow-core<br/>contracts + governance UI] --> B[SupportFlow<br/>Banking module]
-  A --> C[CareFlow<br/>Healthcare module]
+flowchart TD
+  CORE[intelliflow-core v2<br/>LangGraph Engine · Kill-Switch · MCP Registry]
 
-  B --> D[(SQLite<br/>support_tickets + audit_logs)]
-  C --> E[(SQLite<br/>patients + appointments + audit_logs)]
+  CORE --> SF_MOD
+  CORE --> CF_MOD
+  CORE --> CLF_MOD
 
-  B --> F[LLM<br/>gpt-4o-mini]
-  C --> G[LLM<br/>gpt-4o-mini]
+  subgraph SF_MOD["SupportFlow — Banking"]
+    SF_RR[Deterministic Router<br/>enum classification] --> SF_PH[Policy Handler<br/>20 banking policies]
+    SF_PH --> SF_AL[(Audit Log)]
+  end
+
+  subgraph CF_MOD["CareFlow — Healthcare"]
+    CF_EX[Regex Extraction<br/>100% success rate] --> CF_KB[FAISS / Pinecone<br/>guideline retrieval]
+    CF_KB --> CF_RE[Reasoning Engine<br/>deterministic gap computation]
+    CF_RE --> CF_AL[(Audit Log)]
+  end
+
+  subgraph CLF_MOD["ClaimsFlow — Insurance"]
+    CLF_LG[LangGraph Agent<br/>claims orchestration] --> CLF_FS[Fraud Score<br/>risk assessment]
+    CLF_FS --> CLF_KS{Kill-Switch<br/>confidence threshold}
+    CLF_KS -->|Pass| CLF_ADJ[Adjudication<br/>auto-approve]
+    CLF_KS -->|Fail| CLF_ESC[Human Review<br/>escalation]
+    CLF_ADJ --> CLF_AL[(Audit Log)]
+    CLF_ESC --> CLF_AL
+  end
 ```
 
 ## SupportFlow Flow
 ```mermaid
 flowchart TD
-  U[Customer message] --> C1[Classifier<br/>enum output]
-  C1 --> R[Router]
-  R --> H1[Positive handler]
-  R --> H2[Negative handler<br/>ticket + policy]
-  R --> H3[Query handler<br/>policy retrieval]
+  subgraph VPC["Enterprise VPC"]
+    U[Customer message] --> C1[Classifier<br/>enum output]
+    C1 --> R[Router]
+    R --> H1[Positive handler]
+    R --> H2[Negative handler<br/>ticket + policy]
+    R --> H3[Query handler<br/>policy retrieval]
 
-  H1 --> L[Audit log]
-  H2 --> L
-  H3 --> L
+    H1 --> L[Audit log]
+    H2 --> L
+    H3 --> L
 
-  H2 --> DB[(SQLite)]
-  L --> DB
+    H2 --> DB[(SQLite)]
+    L --> DB
+  end
 ```
 
 ## CareFlow Flow (Governed Deterministic Reasoning)
@@ -93,27 +112,6 @@ flowchart TD
   KB --> RE
   RE --> A[Responder<br/>LLM formats + citations]
   A --> L[Audit log]
-```
-
-## FHIR Dual-Mode Ingestion
-```mermaid
-flowchart TD
-  subgraph Legacy Path
-    CN[Clinic Note<br/>free text] --> RX[Regex Extraction<br/>A1C, BP, meds, conditions]
-  end
-
-  subgraph FHIR Path
-    FB[FHIR R4 Bundle] --> FP[FHIR Parser]
-    FP --> PT[Patient Resource<br/>name extraction]
-    FP --> OB[Observation Resource<br/>LOINC 4548-4 → A1C value]
-  end
-
-  RX --> EF[ExtractedFacts<br/>unified schema]
-  PT --> AD[FHIR Adapter<br/>maps to ExtractedFacts]
-  OB --> AD
-  AD --> EF
-
-  EF --> RE[Reasoning Engine<br/>deterministic gap rules]
 ```
 
 ## Chaos Mode Control Flow
@@ -151,7 +149,7 @@ flowchart LR
 
   subgraph AI Test Generator
     SC -->|FieldInfo introspection| TG[LLM generates<br/>pytest suites]
-    TG --> PY[pytest validates<br/>35 tests]
+    TG --> PY[pytest validates<br/>35 generated · 193 total]
   end
 
   subgraph NL Log Query
@@ -168,7 +166,7 @@ flowchart LR
 ```
 
 ## Notes
-- This is a reference implementation optimized for auditability and interview-ready proof.
+- Enterprise integration middleware optimized for auditability and regulatory compliance.
 - Deterministic logic is used where correctness matters.
 - LLM translates and formats; code decides.
 - Designed for Azure OpenAI Service (BAA-eligible) to meet enterprise compliance requirements for regulated industries.
