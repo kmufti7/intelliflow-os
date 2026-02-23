@@ -70,7 +70,7 @@ Each release includes:
 | **Tests** | 193 total (158 hand-written + 35 AI-generated) across 4 repositories |
 | **Enterprise Evidence Pack** | 18 documents mapped to NIST AI RMF, OWASP LLM Top 10, EU AI Act record-keeping, SR 11-7 |
 | **Developer Tools** | 3 tools (AI test generator, NL log query, scaffold generator) |
-| **Verification** | 137 automated checks (enterprise docs) + 15-check cascade verification |
+| **Verification** | 138 automated checks (enterprise docs) + 15-check cascade verification |
 | **Compliance Alignment** | HIPAA-aligned design patterns, NIST AI RMF mapped, OWASP LLM Top 10 mapped |
 | **Infrastructure** | Azure OpenAI Service (GPT-4o-mini), local FAISS (PHI), Pinecone (guidelines), SQLite (audit) |
 

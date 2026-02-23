@@ -14,6 +14,10 @@ import yaml
 
 REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+CONFIG_PATH = os.path.join(REPO_ROOT, "portfolio_config.yaml")
+with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+    config = yaml.safe_load(f)
+
 results = []
 
 
@@ -84,7 +88,8 @@ check_exists_and_nonempty("COST_MODEL.md")
 # --- TEST_STRATEGY.md ---
 content = check_exists_and_nonempty("TEST_STRATEGY.md")
 if content:
-    check_contains("TEST_STRATEGY.md", content, "193")
+    expected_total = str(config["metrics"]["total_tests"])
+    check_contains("TEST_STRATEGY.md", content, expected_total)
 
 # --- DATA_DICTIONARY.md ---
 check_exists_and_nonempty("DATA_DICTIONARY.md")
@@ -123,9 +128,6 @@ if content:
 
 
 # --- Enterprise doc count consistency across all .md files ---
-config_path = os.path.join(REPO_ROOT, "portfolio_config.yaml")
-with open(config_path, "r", encoding="utf-8") as f:
-    config = yaml.safe_load(f)
 expected_count = config["metrics"]["enterprise_docs"]
 
 # Pattern: integer immediately adjacent to "Enterprise Evidence Pack"
@@ -358,26 +360,58 @@ for filename, keywords in TOKEN_LEDGER_COVERAGE.items():
 
 # --- Test count consistency in enterprise/strategy docs ---
 expected_tests = config["metrics"]["total_tests"]
-test_count_files = ["DEVELOPER_EXPERIENCE_STRATEGY.md"]
-# Also scan docs/enterprise/ for any file mentioning test counts
-test_count_pattern = re.compile(
-    r"\b(\d+)\s+tests?\s+(?:already\s+)?passing\b"
-)
+test_count_files = [
+    "DEVELOPER_EXPERIENCE_STRATEGY.md",
+    os.path.join("portfolio_writeup", "01_executive_summary.md"),
+    os.path.join("portfolio_writeup", "03_product_strategy.md"),
+    os.path.join("docs", "enterprise", "PRODUCT_ROADMAP.md"),
+]
+test_count_patterns = [
+    re.compile(r"\b(\d+)\s+tests?\s+(?:already\s+)?passing\b"),
+    re.compile(r"\b(\d+)\s+total\s+tests\b"),
+    re.compile(r"\*\*(\d+)\s+(?:passing\s+)?tests?\*\*"),
+]
 
 for doc in test_count_files:
     fpath = os.path.join(REPO_ROOT, doc)
     if not os.path.isfile(fpath):
         continue
+    fname = os.path.basename(doc)
     with open(fpath, "r", encoding="utf-8") as f:
         lines = f.readlines()
     for line_num, line in enumerate(lines, start=1):
-        for m in test_count_pattern.finditer(line):
-            found = int(m.group(1))
-            check(
-                f"{doc}:{line_num} test count = {expected_tests}",
-                found == expected_tests,
-                f"found {found}, expected {expected_tests}" if found != expected_tests else "",
-            )
+        for pat in test_count_patterns:
+            for m in pat.finditer(line):
+                found = int(m.group(1))
+                check(
+                    f"{fname}:{line_num} test count = {expected_tests}",
+                    found == expected_tests,
+                    f"found {found}, expected {expected_tests}" if found != expected_tests else "",
+                )
+
+
+# --- Stale verification count in portfolio files ---
+STALE_VERIFICATION_FILES = [
+    os.path.join("portfolio_writeup", "01_executive_summary.md"),
+    os.path.join("portfolio_writeup", "03_product_strategy.md"),
+    os.path.join("portfolio_writeup", "05_architecture_decisions.md"),
+]
+
+stale_verif_pattern = re.compile(r"\b59[\s-](?:check|automated|verification)")
+
+for rel_path in STALE_VERIFICATION_FILES:
+    abs_path = os.path.join(REPO_ROOT, rel_path)
+    if not os.path.isfile(abs_path):
+        continue
+    fname = os.path.basename(rel_path)
+    with open(abs_path, "r", encoding="utf-8") as f:
+        for line_num, line in enumerate(f, start=1):
+            if stale_verif_pattern.search(line):
+                check(
+                    f"{fname}:{line_num} no stale 59-check reference",
+                    False,
+                    f"found '59' verification count, expected 137",
+                )
 
 
 # --- Cross-reference claims: assert numeric claims match config ---

@@ -114,7 +114,7 @@ code generation, ast.parse, Python AST, scaffold generator, developer tooling, P
 - [ ] TEST_STRATEGY.md updated (add Scaffold Generator row, update totals)
 - [ ] linkedin_experience.md updated
 - [ ] verify_cascade.py passes (7/7)
-- [ ] verify_enterprise_docs.py passes (137/137)
+- [ ] verify_enterprise_docs.py passes (138/138)
 - [ ] No forbidden phrases in any updated file
 
 ---

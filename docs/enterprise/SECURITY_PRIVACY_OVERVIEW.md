@@ -91,7 +91,7 @@ This architectural standard eliminates the immense InfoSec, Legal, and Procureme
 
 - **Data boundary:** All inference data remains within the customer's Azure tenant boundary. No data crosses to OpenAI's infrastructure.
 - **No training on customer data:** Under Microsoft's enterprise agreement, customer data sent to Azure OpenAI Service is not used for model training or improvement.
-- **Model selection:** The platform targets Azure OpenAI GPT-4o-mini (~10x cheaper than GPT-4o) for cost-optimized inference while maintaining clinical accuracy.
+- **Model selection:** The platform targets Azure OpenAI GPT-4o-mini for cost-optimized inference while maintaining clinical accuracy — significant cost reduction via regex-first extraction means LLM fallback rarely triggers.
 
 > See [VENDOR_COMPARISON.md](../../VENDOR_COMPARISON.md) for the full model selection rationale and [COST_MODEL.md](../../COST_MODEL.md) for the 5-layer cost optimization architecture.
 

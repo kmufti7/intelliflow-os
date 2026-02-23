@@ -7,7 +7,7 @@ This document explains the technology choices made for IntelliFlow OS and the ra
 | Option | Chosen | Rationale |
 |--------|--------|-----------|
 | Azure OpenAI Service | Yes | Enterprise compliance (BAA available for HIPAA), data residency controls, same models as OpenAI |
-| OpenAI Direct API | No | No Business Associate Agreement (BAA) for healthcare use cases |
+| OpenAI Direct API | No | BAA-eligible, but requires onboarding a separate sub-processor — no VNet, Entra ID, Key Vault, or MACC integration |
 | Anthropic Claude | No | Strong alternative, but Azure relationship already established |
 | Open Source (Llama, Mistral) | No | Self-hosting complexity, less suitable for production-grade reference architecture |
 

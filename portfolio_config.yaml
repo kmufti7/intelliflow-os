@@ -20,7 +20,7 @@ metrics:
 
   # Enterprise docs
   enterprise_docs: 18
-  verification_checks: 137
+  verification_checks: 138
   cascade_checks: 15
 
   # Build metrics

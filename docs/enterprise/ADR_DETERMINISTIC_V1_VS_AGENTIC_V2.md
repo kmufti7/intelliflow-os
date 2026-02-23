@@ -96,10 +96,10 @@ Discard v1 modules entirely. Rebuild SupportFlow and CareFlow as agentic-native 
 | **Migration effort** | High. Complete rewrite of two production-validated modules. |
 | **Audit trail impact** | Breaking change for all existing deployments. |
 | **Kill-switch** | Lost permanently. No deterministic fallback available. |
-| **Regulatory risk** | Very high. All existing compliance documentation, test suites (253 tests), and enterprise evidence (18 docs, 137 checks) apply to v1 architecture. Rewrite invalidates all of it. |
+| **Regulatory risk** | Very high. All existing compliance documentation, test suites (253 tests), and enterprise evidence (18 docs, 138 checks) apply to v1 architecture. Rewrite invalidates all of it. |
 | **Customer impact** | Operators lose access to deterministic modules. No migration path — only replacement. |
 
-**Rejection rationale:** Destroys 253 tests, 18 enterprise documents, and 137 verification checks worth of validated compliance infrastructure. The rewrite provides no incremental regulatory benefit over Option B and introduces significant regression risk.
+**Rejection rationale:** Destroys 253 tests, 18 enterprise documents, and 138 verification checks worth of validated compliance infrastructure. The rewrite provides no incremental regulatory benefit over Option B and introduces significant regression risk.
 
 ---
 
@@ -116,7 +116,7 @@ Discard v1 modules entirely. Rebuild SupportFlow and CareFlow as agentic-native 
 | **Time to new workflow** | Days to weeks. Pipeline design, implementation, testing, documentation. | Hours to days. Agent configuration, guardrail definition, validation. |
 | **SR 11-7 alignment** | Strong. Model outputs separated from business logic. Model risk isolated to extraction layer. | Requires mitigation. Agent routing conflates model output with business logic. Guardrail documentation addresses this. |
 | **Test strategy** | Unit + integration + chaos. 253 tests validate deterministic behavior. | Scenario-based + adversarial + guardrail boundary. Requires different testing methodology. |
-| **Enterprise evidence reuse** | Full. All 18 docs and 137 checks apply directly. | Partial. Governance framework (NIST AI RMF, OWASP) applies. Module-specific evidence requires new documentation. |
+| **Enterprise evidence reuse** | Full. All 18 docs and 138 checks apply directly. | Partial. Governance framework (NIST AI RMF, OWASP) applies. Module-specific evidence requires new documentation. |
 
 ---
 

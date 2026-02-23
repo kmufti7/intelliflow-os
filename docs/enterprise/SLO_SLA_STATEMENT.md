@@ -33,7 +33,7 @@ Performance targets are measured against the platform's reference deployment (si
 | Regex extraction (CareFlow) | < 50ms per patient | CPU-bound, local | Regex-first pattern eliminates LLM round-trip for structured data |
 | FAISS vector search (local) | < 100ms per query | CPU-bound, in-process | No network latency — same-machine retrieval |
 | Pinecone guideline retrieval | < 500ms per query | Network-bound (cloud) | De-identified concept queries only; cacheable |
-| Azure OpenAI inference | 1–5s per request | Network + model latency | GPT-4o-mini (~10x cheaper, lower latency than GPT-4o) |
+| Azure OpenAI inference | 1–5s per request | Network + model latency | GPT-4o-mini (lower latency than GPT-4o; regex-first extraction reduces LLM calls) |
 | End-to-end gap analysis (CareFlow) | < 10s per patient | LLM explanation generation | Regex extraction + deterministic gap computation complete in < 200ms; LLM formats explanation |
 | Policy routing (SupportFlow) | < 200ms per query | CPU-bound, keyword matching | No vector search — deterministic keyword lookup against 60+ mappings |
 | Audit log write | < 10ms per event | Local SQLite I/O | Pydantic validation + SQLite insert; no network dependency |
@@ -114,7 +114,7 @@ All platform demonstrations and test suites use synthetic patient data. No produ
 |--------|-------|-----------|
 | **Automated test suite** | 193 tests (158 hand-written + 35 AI-generated) covering extraction, reasoning, routing, chaos, PHI safety, FHIR, schema validation | Every commit via GitHub Actions CI |
 | **Chaos mode testing** | Failure injection for FAISS, Pinecone, and database components with graceful fallback verification | On-demand via Streamlit UI toggle; validated in test suite |
-| **Enterprise docs verification** | 137 automated checks across 18 enterprise documents for consistency, accuracy, and completeness | On-demand via `verify_enterprise_docs.py`; 15-check cascade verification via `verify_cascade.py` |
+| **Enterprise docs verification** | 138 automated checks across 18 enterprise documents for consistency, accuracy, and completeness | On-demand via `verify_enterprise_docs.py`; 15-check cascade verification via `verify_cascade.py` |
 | **Cost tracking** | Per-interaction token usage and cost attribution logged via Pydantic schemas | Every LLM call; aggregated in audit logs |
 
 ### What the Platform Does Not Measure
