@@ -45,8 +45,8 @@ If the change affects:
 
 ## Step 7: Report
 Output:
-- verify_cascade.py result (X/11)
-- verify_enterprise_docs.py result (X/59)
+- verify_cascade.py result (X/15)
+- verify_enterprise_docs.py result (X/137)
 - Portfolio files needing update (list with reasons)
 - Diagrams needing update (list with reasons)
 - Cross-repo issues (list)

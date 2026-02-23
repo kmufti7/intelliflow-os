@@ -51,6 +51,19 @@ This index is the fastest way to review enterprise readiness signals.
 |-----------|------------|
 | intelliflow-core | [intelliflow-core](https://github.com/kmufti7/intelliflow-core) |
 
+### intelliflow-core v2 Runtime Files
+| File | Purpose |
+|------|---------|
+| `v2/runtime/kill_switch.py` | KillSwitchGuard — deterministic governance enforcement interceptor (fail-closed, collect-all-failures) |
+| `v2/runtime/contracts.py` | GovernanceRule (self-documenting rule struct), WorkflowResult (structured run() return) |
+| `v2/runtime/exceptions.py` | KillSwitchTriggered (carries failed_rules + state_snapshot for audit) |
+| `v2/tests/test_kill_switch.py` | 8 tests: pass, single failure, multi-failure, workflow integration, zero rules, state snapshot, fail-closed, immutability |
+| `v2/runtime/tool_registry.py` | MCPRegistry (static catalog + dynamic scoping) + ToolSchema (Pydantic-validated tool definition) |
+| `v2/tests/test_tool_registry.py` | 12 tests: registration, duplicate rejection, lock, post-lock rejection, scoped retrieval, unknown tool, full catalog, lock state, description required, input schema, scoped isolation, empty scope |
+| `v2/storage/db.py` | DatabaseSessionManager — shared SQLite connection with WAL mode |
+| `v2/storage/worm_logger.py` | WORMLogRepository — HMAC-SHA256 hash-chained WORM audit log, SQLite triggers |
+| `v2/tests/test_worm_logger.py` | 12 tests: table creation, trigger enforcement, GENESIS, hash chain, verification, tamper detection, fail-closed, workflow integration, kill-switch logging, tool execution, trace_id propagation |
+
 ## Project Governance
 | Document | Purpose |
 |----------|---------|

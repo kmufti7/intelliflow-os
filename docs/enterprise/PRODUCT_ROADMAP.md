@@ -18,7 +18,7 @@ v1.0 is the foundation: two production-ready modules, a shared governance SDK, a
 | **Enterprise Evidence Pack** | 18 documents mapped to NIST AI RMF, OWASP LLM Top 10, EU AI Act, SR 11-7 |
 | **Developer Tools** | 3 tools: AI test generator, NL log query, scaffold generator |
 | **SDK** | intelliflow-core — pip-installable shared governance SDK with 3 Pydantic contracts |
-| **Verification** | 59 automated checks (enterprise docs) + 13-check cascade verification |
+| **Verification** | 137 automated checks (enterprise docs) + 15-check cascade verification |
 | **Deterministic Reasoning** | LLM extracts, code decides, LLM explains — no LLM authority over clinical or policy decisions |
 | **Data Residency** | PHI stays local (FAISS). Only de-identified concepts reach cloud services (Pinecone) |
 | **Chaos Engineering** | Failure injection for FAISS, Pinecone, and database with graceful fallback and audit logging |

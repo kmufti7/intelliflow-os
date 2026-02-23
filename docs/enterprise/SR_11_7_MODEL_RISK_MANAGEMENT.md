@@ -40,10 +40,10 @@ This document maps SR 11-7 requirements to IntelliFlow OS controls across both m
 | **Conceptual Soundness** | §IV.A.1 | "Code decides, LLM explains" principle separates model outputs (extraction, classification) from business logic (gap computation, policy routing, escalation). LLM is a data processing tool, not a decision-maker. | GOVERNANCE.md §Deterministic Reasoning, ADR_DETERMINISTIC_V1_VS_AGENTIC_V2.md |
 | **Outcome Analysis** | §IV.A.2 | 193 tests (158 hand-written + 35 AI-generated) validate expected outcomes. Regex extraction achieves 100% accuracy on test patients. Gap computation is deterministic — same inputs produce same outputs. | TEST_STRATEGY.md, verify_cascade.py |
 | **Ongoing Monitoring** | §IV.B | Per-interaction audit logging captures: component, action, timestamp, success/failure, confidence, reasoning, and cost. Governance panel provides real-time visibility. | OBSERVABILITY.md, AuditEventSchema |
-| **Model Validation** | §V | Platform provides 59 automated verification checks and 13 cascade consistency checks. Independent validation (challenger models, backtesting) is the deploying institution's responsibility. | verify_enterprise_docs.py, verify_cascade.py |
+| **Model Validation** | §V | Platform provides 137 automated verification checks and 15 cascade consistency checks. Independent validation (challenger models, backtesting) is the deploying institution's responsibility. | verify_enterprise_docs.py, verify_cascade.py |
 | **Governance & Controls** | §VI | Pydantic-enforced schemas (AuditEventSchema, CostTrackingSchema, GovernanceLogEntry) ensure structured data integrity. No unvalidated data enters or exits the pipeline. | intelliflow-core contracts.py |
 | **Audit Trail** | §VI.B | Every decision logged with evidence chain: input data → extraction result → business logic output → explanation with citations. Queryable via NL Log Query tool. | Governance log, nl_log_query.py |
-| **Change Management** | §VI.C | 13-check cascade verification ensures changes propagate consistently across 4 repositories. CHANGELOG.md tracks version history. Semantic versioning policy documented. | verify_cascade.py, RELEASE_NOTES_VERSIONING.md |
+| **Change Management** | §VI.C | 15-check cascade verification ensures changes propagate consistently across 4 repositories. CHANGELOG.md tracks version history. Semantic versioning policy documented. | verify_cascade.py, RELEASE_NOTES_VERSIONING.md |
 | **Model Inventory** | §VI.D | Single model (gpt-4o-mini) documented in VENDOR_COMPARISON.md. Model selection rationale, alternatives considered, and cost implications recorded. | VENDOR_COMPARISON.md, COST_MODEL.md |
 | **Roles & Responsibilities** | §VI.E | Platform distinguishes operator responsibilities from platform capabilities. Shared responsibility model documented. | SECURITY_PRIVACY_OVERVIEW.md |
 
@@ -131,6 +131,14 @@ SR 11-7 §VI states that institutions must have the ability to "limit or cease m
 3. **Audit continuity.** Governance logging continues in kill-switch mode. The audit trail records that the LLM was disabled, when, and by whom.
 4. **Reversible.** Re-enabling the LLM restores full functionality without data migration or system reconfiguration.
 
+### KillSwitchGuard — v2 Implementation (intelliflow-core v2)
+
+KillSwitchGuard (intelliflow-core v2): Deterministic interceptor node evaluated at the LangGraph graph level before any LLM call. Implements SR 11-7 kill-switch mandate with fail-closed semantics (rule exceptions treated as failures), collect-all-failures audit payload, and self-documenting GovernanceRule contracts (required description field enforced at type level). Raises KillSwitchTriggered with full rule failure set and state snapshot for downstream WORM logging (Step 4).
+
+### WORMLogRepository — v2 Implementation (intelliflow-core v2)
+
+WORMLogRepository (intelliflow-core v2): HMAC-SHA256 hash-chained audit log with SQLite-enforced Write-Once immutability. Logs KILL_SWITCH_TRIGGERED events with full GovernanceRule failure list and state snapshot. Fail-closed: WORMStorageError halts workflow if log write fails — no unlogged AI decisions. Session-bounded trace_id enables complete workflow lifecycle reconstruction for SR 11-7 audit. Each log entry chains to the previous entry via HMAC-SHA256 with a KMS-ready secret key — without the key, the chain cannot be mathematically rewritten, providing non-repudiation against database-level tampering. SQLite BEFORE UPDATE/DELETE triggers enforce physical immutability independent of application code. 12 tests validate table creation, trigger enforcement, hash chain integrity, tamper detection, fail-closed behavior, and workflow integration.
+
 ### Relationship to v2 (Agentic)
 
 The kill-switch mandate is a key factor in the v1 vs v2 architecture decision (documented in ADR_DETERMINISTIC_V1_VS_AGENTIC_V2.md). Agentic architectures cannot provide an equivalent kill-switch because the agent is the orchestrator — disabling the LLM disables the workflow. This is why v1 modules are not retrofitted with agentic patterns: the kill-switch capability is the regulatory value proposition, not a limitation.
@@ -144,8 +152,8 @@ IntelliFlow OS provides architecture patterns and controls. The following SR 11-
 ### 6.1 Independent Model Validation
 
 SR 11-7 requires that model validation be performed by parties independent of model development. IntelliFlow OS provides:
-- 193 automated tests
-- 59 documentation verification checks
+- 253 automated tests
+- 137 documentation verification checks
 - Deterministic decision paths that are inspectable
 
 The deploying institution must:
@@ -207,6 +215,22 @@ Azure OpenAI Service is a third-party model provider. The deploying institution 
 | [EU AI Act — Article 9 (Risk Management System)](https://eur-lex.europa.eu/eli/reg/2024/1689/oj) | European parallel to SR 11-7. Requires risk management for high-risk AI systems. IntelliFlow OS controls apply to both frameworks. |
 | [ADR: Managed Inference vs. Self-Hosted](ADR_MANAGED_INFERENCE_VS_SELF_HOSTED.md) | Architecture decision documenting managed inference selection. Relevant to SR 11-7 third-party model risk assessment. |
 | [ADR: Deterministic v1 vs. Agentic v2](ADR_DETERMINISTIC_V1_VS_AGENTIC_V2.md) | Architecture decision documenting kill-switch mandate and model risk separation. Directly addresses SR 11-7 override requirements. |
+
+### Token FinOps Tracker — Operational Efficiency Evidence
+
+SR 11-7 requires ongoing monitoring of model performance and operational efficiency.
+IntelliFlow OS satisfies this with TokenLedgerRepository, an append-only financial
+ledger that records every LLM invocation with immutable point-in-time cost data.
+
+This enables:
+- Cost trend monitoring — detect model cost drift across versions or time periods
+- Per-module efficiency reporting — identify which workflows consume disproportionate token budget
+- PTU capacity justification — persistent consumption baselines support the business case for Provisioned Throughput Unit commitments to model validators
+
+Token tracking is treated as double-entry accounting, not telemetry. The cost_usd
+column stores the calculated USD value at write time — pricing changes cannot alter
+historical records. This satisfies the SR 11-7 requirement for model monitoring data
+to reflect conditions at the time of operation, not retroactively adjusted values.
 
 ---
 

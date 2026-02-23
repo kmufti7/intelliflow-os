@@ -46,6 +46,14 @@ The "Therefore" pattern ensures:
 
 This separates **decision logic** (deterministic, auditable) from **communication** (LLM-generated, flexible).
 
+### Governance Enforcement (v2 — KillSwitchGuard)
+
+intelliflow-core v2 extends the "Code as Judge" principle to workflow-level enforcement. GovernanceRule contracts make ethical constraints explicit — each rule carries a required `description` field that documents what the rule enforces in human-readable language. KillSwitchGuard evaluates every registered rule before any LLM node executes. If any rule fails, the workflow halts with a structured failure payload. The system is fail-closed: if a rule's evaluation logic raises an exception, it is treated as a failure — the system errs toward blocking when a guardrail malfunctions, never toward silently passing.
+
+This makes ethical constraints auditable, enforceable at runtime, and self-documenting at the type level.
+
+The WORM audit log (WORMLogRepository) extends ethical accountability from runtime enforcement to permanent record. Every GovernanceRule evaluation — whether passed or failed — is logged to an HMAC-SHA256 hash-chained, append-only store with SQLite-enforced Write-Once immutability. An ethics reviewer can reconstruct exactly which rules fired, which failed, and what state the system was in at the moment of each decision. The fail-closed design (WORMStorageError halts execution on any write failure) ensures that ethical constraints are not just enforced — their enforcement is permanently and tamper-evidently recorded.
+
 ---
 
 ## SupportFlow: Customer Service Considerations

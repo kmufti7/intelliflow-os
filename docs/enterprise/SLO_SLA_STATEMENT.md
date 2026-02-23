@@ -57,6 +57,11 @@ IntelliFlow OS provides the infrastructure for compliance evidence. All commitme
 | **Deterministic reasoning** | Gap detection and clinical decisions are computed by Python code, not LLM inference — auditable and reproducible | [GOVERNANCE.md](../../GOVERNANCE.md) |
 | **Resilience validation** | Chaos mode injects failures (FAISS, Pinecone, database) and validates graceful fallback with audit logging | [ARCHITECTURE.md](../../ARCHITECTURE.md) |
 | **Framework alignment** | Design patterns mapped to NIST AI RMF, OWASP LLM Top 10, EU AI Act record-keeping requirements | [GOVERNANCE.md](../../GOVERNANCE.md), [SECURITY.md](../../SECURITY.md) |
+| **Kill-switch enforcement (v2)** | KillSwitchGuard evaluates GovernanceRule contracts before any LLM node. Fail-closed: rule evaluation errors are treated as failures — the system defaults to blocking. Structured WorkflowResult carries full failure list for audit. | [ARCHITECTURE.md](../../ARCHITECTURE.md) |
+
+**SLO trade-off — fail-closed kill-switch:** The fail-closed design means a misconfigured GovernanceRule blocks workflows rather than silently passing. This is an explicit trade-off: safety over availability. Operators must validate GovernanceRule logic before deployment. A rule that always raises an exception will halt every workflow. This is by design — in regulated environments, a false positive (blocked workflow) is recoverable, while a false negative (undetected governance violation) may not be.
+
+**SLO trade-off — fail-closed WORM logger:** WORMStorageError halts workflow execution when the WORM audit log write fails (database locked, disk full, connection lost). This is the same fail-closed contract as KillSwitchGuard: a SQLite write failure degrades availability to protect compliance. Under SEC 17a-4 and SR 11-7, an unlogged AI decision is treated as a compliance violation. Operators must ensure database health before deployment. Explicit trade-off: compliance over availability.
 
 **What "audit trail completeness" means:** The platform logs every operation that touches data, makes a decision, or incurs cost. It does not guarantee that the operator's surrounding infrastructure (network logs, IAM events, OS-level access) is similarly instrumented. End-to-end audit coverage is a shared responsibility.
 
@@ -109,7 +114,7 @@ All platform demonstrations and test suites use synthetic patient data. No produ
 |--------|-------|-----------|
 | **Automated test suite** | 193 tests (158 hand-written + 35 AI-generated) covering extraction, reasoning, routing, chaos, PHI safety, FHIR, schema validation | Every commit via GitHub Actions CI |
 | **Chaos mode testing** | Failure injection for FAISS, Pinecone, and database components with graceful fallback verification | On-demand via Streamlit UI toggle; validated in test suite |
-| **Enterprise docs verification** | 59 automated checks across 13 enterprise documents for consistency, accuracy, and completeness | On-demand via `verify_enterprise_docs.py`; 12-check cascade verification via `verify_cascade.py` |
+| **Enterprise docs verification** | 137 automated checks across 18 enterprise documents for consistency, accuracy, and completeness | On-demand via `verify_enterprise_docs.py`; 15-check cascade verification via `verify_cascade.py` |
 | **Cost tracking** | Per-interaction token usage and cost attribution logged via Pydantic schemas | Every LLM call; aggregated in audit logs |
 
 ### What the Platform Does Not Measure

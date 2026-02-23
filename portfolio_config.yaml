@@ -4,7 +4,9 @@
 
 metrics:
   # Test counts
-  total_tests: 193
+  total_tests: 253
+  v1_legacy_tests: 193
+  v2_langgraph_tests: 60
   hand_written_tests: 158
   ai_generated_tests: 35
   core_tests: 32
@@ -18,7 +20,8 @@ metrics:
 
   # Enterprise docs
   enterprise_docs: 18
-  verification_checks: 59
+  verification_checks: 137
+  cascade_checks: 15
 
   # Build metrics
   build_time_actual: "~7 hours"
@@ -53,3 +56,15 @@ metrics:
   # Platform
   modules: 2
   repos: 4
+
+completed_v2_steps:
+  - name: "LangGraphWorkflow"
+    step: 1
+  - name: "KillSwitchGuard"
+    step: 2
+  - name: "MCPRegistry"
+    step: 3
+  - name: "WORMLogRepository"
+    step: 4
+  - name: "TokenLedgerRepository"
+    step: 5

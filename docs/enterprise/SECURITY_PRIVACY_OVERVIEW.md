@@ -38,6 +38,9 @@ All inputs and outputs pass through Pydantic-enforced schemas before processing.
 ### No Raw Patient Data in LLM Prompts
 The deterministic reasoning pattern ("LLM extracts, code decides, LLM explains") means the LLM receives structured, pre-extracted facts — not raw patient notes. Gap detection is performed by deterministic Python code. The LLM's role is limited to formatting explanations with dual citations (patient evidence + guideline evidence).
 
+### Runtime Kill-Switch (v2)
+KillSwitchGuard is a deterministic interceptor node in the v2 LangGraph runtime that evaluates GovernanceRule contracts before any LLM node executes. If any rule fails, the workflow halts with a structured audit payload (failed rules + state snapshot). The system defaults to blocking on rule evaluation errors (fail-closed), preventing uncontrolled inference when a governance check cannot be evaluated. This limits the blast radius of any single LLM call — if a data residency rule or cost threshold rule cannot confirm compliance, the workflow stops.
+
 ### Audit Logging on All Data Access Paths
 Every data access — patient retrieval, guideline lookup, LLM call, cost event, chaos injection — is logged via Pydantic-validated audit schemas. The NL Log Query developer tool enables natural language queries against these logs (e.g., "Show me all escalations from last week") with SQL injection prevention (column whitelist, 13 blocked keywords).
 
@@ -80,9 +83,12 @@ IntelliFlow OS provides the governance architecture. Production deployment requi
 
 ## Azure OpenAI Service Deployment
 
-IntelliFlow OS is designed for **Azure OpenAI Service**, not the direct OpenAI API. This distinction matters for regulated deployments:
+While foundational model providers (including direct OpenAI Enterprise) now offer BAA eligibility, Zero Data Retention (ZDR), and PrivateLink configurations, satisfying baseline compliance is only the first step in enterprise AI deployment.
 
-- **BAA eligibility:** Azure OpenAI Service is covered under Microsoft's HIPAA Business Associate Agreement. Direct OpenAI API is not.
+IntelliFlow OS explicitly standardizes on Azure OpenAI Service to ensure deployments remain entirely within the organization's existing sovereign cloud perimeter. By leveraging Azure, IntelliFlow OS natively inherits the enterprise's pre-approved Virtual Networks (VNets), Microsoft Entra ID Role-Based Access Control (RBAC), Azure Key Vault Customer-Managed Keys (CMK), and existing Microsoft cloud billing commitments (MACC).
+
+This architectural standard eliminates the immense InfoSec, Legal, and Procurement friction of onboarding a net-new Tier-1 data sub-processor, ensuring that AI workloads are governed by the exact same centralized security and identity policies as the rest of the enterprise infrastructure.
+
 - **Data boundary:** All inference data remains within the customer's Azure tenant boundary. No data crosses to OpenAI's infrastructure.
 - **No training on customer data:** Under Microsoft's enterprise agreement, customer data sent to Azure OpenAI Service is not used for model training or improvement.
 - **Model selection:** The platform targets Azure OpenAI GPT-4o-mini (~10x cheaper than GPT-4o) for cost-optimized inference while maintaining clinical accuracy.

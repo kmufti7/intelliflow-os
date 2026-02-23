@@ -248,6 +248,114 @@ if forbidden_violations == 0:
     check("Enterprise docs: no forbidden phrases", True)
 
 
+# --- Semantic coverage: kill-switch guard across docs ---
+SEMANTIC_COVERAGE = {
+    "SECURITY.md": ["KillSwitchGuard", "fail-closed"],
+    "ETHICS.md": ["KillSwitchGuard", "GovernanceRule"],
+    "PRODUCT_BRIEF.md": ["KillSwitchGuard"],
+    "DATA_DICTIONARY.md": [
+        "KillSwitchGuard",
+        "GovernanceRule",
+        "KillSwitchTriggered",
+        "WorkflowResult",
+    ],
+    "docs/enterprise/SLO_SLA_STATEMENT.md": ["fail-closed", "KillSwitchGuard"],
+    "OBSERVABILITY.md": ["KillSwitchGuard", "KillSwitchTriggered"],
+    "README.md": ["KillSwitchGuard"],
+    "ARCHITECTURE.md": ["KillSwitchGuard"],
+    "portfolio_writeup/01_executive_summary.md": ["KillSwitchGuard"],
+    "portfolio_writeup/02_technical_deep_dive.md": ["KillSwitchGuard", "GovernanceRule"],
+    "portfolio_writeup/04_enterprise_pain_points.md": ["KillSwitchGuard"],
+    "portfolio_writeup/linkedin_experience.md": ["KillSwitchGuard"],
+}
+
+for filename, keywords in SEMANTIC_COVERAGE.items():
+    content = read_file(filename)
+    if content is None:
+        for kw in keywords:
+            check(f'{filename} contains "{kw}"', False, "file not found")
+    else:
+        for kw in keywords:
+            check_contains(filename, content, kw)
+
+
+# --- Semantic coverage: MCP Tool Registry across docs ---
+MCP_REGISTRY_COVERAGE = {
+    "SECURITY.md": ["MCPRegistry"],
+    "OBSERVABILITY.md": ["MCPRegistry"],
+    "README.md": ["MCPRegistry"],
+    "COST_MODEL.md": ["MCPRegistry"],
+    "DOCS_INDEX.md": ["tool_registry"],
+    "portfolio_writeup/01_executive_summary.md": ["MCPRegistry"],
+    "portfolio_writeup/02_technical_deep_dive.md": ["MCPRegistry", "ToolSchema"],
+    "portfolio_writeup/04_enterprise_pain_points.md": ["MCPRegistry"],
+}
+
+for filename, keywords in MCP_REGISTRY_COVERAGE.items():
+    content = read_file(filename)
+    if content is None:
+        for kw in keywords:
+            check(f'{filename} contains "{kw}"', False, "file not found")
+    else:
+        for kw in keywords:
+            check_contains(filename, content, kw)
+
+
+# --- Semantic coverage: WORM audit log across docs ---
+WORM_COVERAGE = {
+    "SECURITY.md": ["WORMLogRepository", "HMAC-SHA256"],
+    "GOVERNANCE.md": ["WORMLogRepository", "trace_id"],
+    "OBSERVABILITY.md": ["WORM", "trace_id"],
+    "ETHICS.md": ["WORM"],
+    "DATA_DICTIONARY.md": ["WORMLogRepository", "WORMStorageError", "DatabaseSessionManager"],
+    "PRODUCT_BRIEF.md": ["WORMLogRepository"],
+    "README.md": ["WORMLogRepository"],
+    "ARCHITECTURE.md": ["WORM"],
+    "DOCS_INDEX.md": ["worm_logger"],
+    "docs/enterprise/SLO_SLA_STATEMENT.md": ["WORMStorageError"],
+    "docs/enterprise/SR_11_7_MODEL_RISK_MANAGEMENT.md": ["WORMLogRepository"],
+    "portfolio_writeup/01_executive_summary.md": ["WORMLogRepository"],
+    "portfolio_writeup/02_technical_deep_dive.md": ["WORMLogRepository", "DatabaseSessionManager"],
+    "portfolio_writeup/04_enterprise_pain_points.md": ["WORMLogRepository", "WORMStorageError"],
+    "portfolio_writeup/linkedin_experience.md": ["WORM"],
+}
+
+for filename, keywords in WORM_COVERAGE.items():
+    content = read_file(filename)
+    if content is None:
+        for kw in keywords:
+            check(f'{filename} contains "{kw}"', False, "file not found")
+    else:
+        for kw in keywords:
+            check_contains(filename, content, kw)
+
+
+# --- Semantic coverage: Token FinOps Tracker across docs ---
+TOKEN_LEDGER_COVERAGE = {
+    "COST_MODEL.md": [
+        "token", "cost", "pricing", "FinOps", "PTU", "chargeback",
+        "immutable receipt", "point-in-time", "pricing drift", "ledger",
+    ],
+    "OBSERVABILITY.md": [
+        "token_ledger", "invocation", "per-invocation", "TokenLedgerRepository",
+        "financial telemetry", "cost_usd",
+    ],
+    "DATA_DICTIONARY.md": [
+        "token_ledger", "cost_usd", "input_tokens", "output_tokens",
+        "trace_id", "workflow_id", "module_name",
+    ],
+}
+
+for filename, keywords in TOKEN_LEDGER_COVERAGE.items():
+    content = read_file(filename)
+    if content is None:
+        for kw in keywords:
+            check(f'{filename} contains "{kw}"', False, "file not found")
+    else:
+        for kw in keywords:
+            check_contains(filename, content, kw)
+
+
 # --- Test count consistency in enterprise/strategy docs ---
 expected_tests = config["metrics"]["total_tests"]
 test_count_files = ["DEVELOPER_EXPERIENCE_STRATEGY.md"]
@@ -270,6 +378,73 @@ for doc in test_count_files:
                 found == expected_tests,
                 f"found {found}, expected {expected_tests}" if found != expected_tests else "",
             )
+
+
+# --- Cross-reference claims: assert numeric claims match config ---
+CROSS_REFERENCE_CLAIMS = [
+    # (regex_with_capture_group, config_key, description)
+    (r"(\d+)\s+automated\s+(?:verification\s+)?checks", "verification_checks", "automated checks"),
+    (r"(\d+)[- ]check\s+cascade", "cascade_checks", "cascade checks"),
+    (r"across\s+(\d+)\s+enterprise\s+documents?", "enterprise_docs", "enterprise doc count"),
+]
+
+# Files to scan for cross-reference claims
+cross_ref_scan_files = []
+enterprise_dir = os.path.join(REPO_ROOT, "docs", "enterprise")
+if os.path.isdir(enterprise_dir):
+    for fname in sorted(os.listdir(enterprise_dir)):
+        if fname.endswith(".md"):
+            cross_ref_scan_files.append(os.path.join("docs", "enterprise", fname))
+
+# Also scan root-level docs
+for root_doc in ["SECURITY.md", "GOVERNANCE.md", "OBSERVABILITY.md", "COST_MODEL.md",
+                 "DATA_DICTIONARY.md", "VENDOR_COMPARISON.md", "TEST_STRATEGY.md"]:
+    cross_ref_scan_files.append(root_doc)
+
+for pattern_str, config_key, desc in CROSS_REFERENCE_CLAIMS:
+    expected_val = config["metrics"].get(config_key)
+    if expected_val is None:
+        continue
+    expected_val = int(expected_val)
+    pattern = re.compile(pattern_str)
+    for rel_path in cross_ref_scan_files:
+        abs_path = os.path.join(REPO_ROOT, rel_path)
+        if not os.path.isfile(abs_path):
+            continue
+        fname = os.path.basename(rel_path)
+        # Skip historical entries in RELEASE_NOTES and CHANGELOG
+        if fname in ("RELEASE_NOTES_VERSIONING.md", "CHANGELOG.md"):
+            continue
+        with open(abs_path, "r", encoding="utf-8") as f:
+            for line_num, line in enumerate(f, start=1):
+                for m in pattern.finditer(line):
+                    found = int(m.group(1))
+                    if found != expected_val:
+                        check(
+                            f"{fname}:{line_num} {desc} = {expected_val}",
+                            False,
+                            f"found {found}, expected {expected_val}",
+                        )
+
+
+# --- Completed v2 steps: detect stale "planned" language in OBSERVABILITY.md ---
+completed_steps = config.get("completed_v2_steps", [])
+if completed_steps:
+    obs_content = read_file("OBSERVABILITY.md")
+    if obs_content:
+        for step_info in completed_steps:
+            component = step_info["name"]
+            step_num = step_info["step"]
+            # Search for "planned" or "will make/add" within 200 chars of component name
+            # Use a sliding window approach
+            for i, line in enumerate(obs_content.splitlines(), start=1):
+                if re.search(rf"(?i){re.escape(component)}", line):
+                    if re.search(r"(?i)\bplanned\b|\bwill\s+(make|add)\b|\bnot yet\b", line):
+                        check(
+                            f"OBSERVABILITY.md:{i} {component} not marked as planned",
+                            False,
+                            f"Step {step_num} is complete per config but line contains stale planned/future language",
+                        )
 
 
 # --- Report ---

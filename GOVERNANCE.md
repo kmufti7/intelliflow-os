@@ -29,7 +29,7 @@ Reference: [NIST AI RMF 1.0](https://www.nist.gov/artificial-intelligence/risk-m
 
 | Metric | Measurement |
 |--------|-------------|
-| Test coverage | 111 tests across platform (32 SDK + 13 SupportFlow + 66 CareFlow) |
+| Test coverage | 253 tests across platform (193 v1 legacy + 60 v2 LangGraph) |
 | Extraction accuracy | 100% regex success rate on structured clinical data |
 | Audit completeness | Every interaction produces audit log entries with timestamps, confidence, and reasoning |
 | Cost visibility | Token counts and USD costs tracked per interaction, visible in governance UI |
@@ -42,6 +42,8 @@ Reference: [NIST AI RMF 1.0](https://www.nist.gov/artificial-intelligence/risk-m
 | Pydantic validation | All audit events and cost records validated through strict schemas; malformed data rejected |
 | CI/CD gates | GitHub Actions runs full test suite on every push; no merge without green |
 | Deterministic routing | Enum-based classification prevents unpredictable agent behavior |
+| Kill-switch guard | Deterministic KillSwitchGuard interceptor evaluates GovernanceRule contracts (self-documenting, required description field) at graph level. Fail-closed: rule exceptions treated as failures. Collect-all-failures: full failure set for audit. Structured WorkflowResult replaces raw exception propagation. Aligns with SR 11-7 kill-switch mandate. |
+| WORM audit log | WORMLogRepository: HMAC-SHA256 hash-chained append-only audit log. SQLite BEFORE UPDATE/DELETE triggers enforce Write-Once at DB layer. Fail-closed WORMStorageError halts workflow on write failure. Session-bounded trace_id links WORKFLOW_START, WORKFLOW_END, TOOL_EXECUTED, KILL_SWITCH_TRIGGERED. Satisfies SR 11-7 and SEC 17a-4. |
 
 ## Governance UI
 
@@ -73,3 +75,17 @@ Under the **EU AI Act**, the CareFlow module (Clinical Decision Support) would l
 | **Article 15** | Accuracy | Deterministic extraction (regex-first) ensures accuracy of input data. Pydantic validation rejects malformed data. |
 
 **Disclaimer:** This is a reference implementation demonstrating architectural patterns. It is not a production-certified medical device and has not undergone formal EU AI Act conformity assessment.
+
+### Token Ledger — Financial Governance Control
+
+| Control | Implementation | Classification |
+|---------|---------------|---------------|
+| Per-invocation cost logging | TokenLedgerRepository.record_invocation() | Financial telemetry |
+| Point-in-time cost immutability | cost_usd stored at write time | Accounting integrity |
+| Partial failure cost capture | Per-invocation granularity, not per-workflow | Financial completeness |
+| WORM linkage | trace_id FK to worm_log | Cross-control traceability |
+| Fail-open design | TokenLedgerError does not halt execution | Operational resilience |
+
+Token tracking is double-entry accounting. A token count without a locked USD value
+is telemetry. A token count with an immutable USD cost at the time of inference is
+an auditable financial receipt. IntelliFlow OS implements the latter.

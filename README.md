@@ -93,7 +93,8 @@ flowchart TD
 | AI Test Generator | Platform | Schema-aware Pydantic test generation | 35 | This repo |
 | NL Log Query | Platform | Natural language audit log search, SQL injection prevention | 15 | This repo |
 | Scaffold Generator | Platform | LLM generates platform-compliant code, ast.parse() validates | 14 | This repo |
-| **Total** | | | **193** | **158 hand-written + 35 AI-generated** |
+| v2 LangGraph Governed Runtime | Platform | Kill-switch, MCP registry, WORM audit, Token FinOps | 60 | [intelliflow-core](https://github.com/kmufti7/intelliflow-core) |
+| **Total** | | | **253** | **193 v1 legacy + 60 v2 LangGraph** |
 
 ---
 
@@ -136,6 +137,11 @@ Translates natural language questions into SQL queries against audit logs. Preve
 Creates boilerplate module structures from high-level descriptions. Generates directory trees, __init__.py files, and starter code. Validates all generated Python with ast.parse(). Pattern: **"LLM generates, ast.parse() validates"** — same validation pattern as test generator, applied to production scaffolding.
 
 All three tools follow the platform's core principle: **deterministic validation of LLM outputs**.
+
+### Governed Runtime Kill-Switch (v2)
+intelliflow-core v2 introduces KillSwitchGuard, a deterministic interceptor that evaluates GovernanceRule contracts before any LLM node in a LangGraph workflow. Each GovernanceRule carries a required `description` field — self-documenting compliance at the type level. If any rule fails, execution halts with a structured audit payload; if a rule's evaluation logic throws an exception, it is treated as a failure (fail-closed). Callers receive a WorkflowResult contract instead of raw exceptions. MCPRegistry provides a statically-defined, immutable tool catalog — tools are registered at import time, the registry locks at initialization, and runtime registration is categorically rejected (RegistryLockedError). Dynamic session scoping via `get_tools(allowed_names)` ensures each LangGraph node receives only its authorized tool subset, enforcing Least-Privilege Access at the registry level.
+
+**WORMLogRepository** provides tamper-evident audit logging via HMAC-SHA256 hash chain — each entry's hash incorporates the previous entry's hash and a secret key, making the chain unforgeable without the key. SQLite BEFORE UPDATE/DELETE triggers enforce Write-Once immutability at the database layer. If a WORM write fails, `WORMStorageError` halts the workflow (fail-closed). Session-bounded `trace_id` links WORKFLOW_START, WORKFLOW_END, TOOL_EXECUTED, and KILL_SWITCH_TRIGGERED events for complete audit trail reconstruction.
 
 ---
 
@@ -181,7 +187,7 @@ python care_app.py --mode=enterprise
 
 | Metric | Value |
 |--------|-------|
-| Total tests | 193 (158 hand-written + 35 AI-generated) |
+| Total tests | 253 (193 v1 legacy + 60 v2 LangGraph) |
 | Test coverage | Extraction, reasoning, routing, chaos, PHI safety, FHIR, schema validation |
 
 ---

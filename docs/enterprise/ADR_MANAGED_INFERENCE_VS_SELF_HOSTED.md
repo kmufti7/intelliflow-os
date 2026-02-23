@@ -29,7 +29,11 @@ IntelliFlow OS uses **managed inference via Azure OpenAI Service** as the primar
 
 ### Option A: Azure OpenAI Service via Private Endpoint (Selected — Primary)
 
-Azure OpenAI Service provides managed access to GPT-4o, GPT-4o-mini, and embedding models (text-embedding-3-small) through Microsoft's enterprise infrastructure. Private endpoints route all inference traffic through the operator's Azure Virtual Network — no data traverses the public internet.
+While foundational model providers (including direct OpenAI Enterprise) now offer BAA eligibility, Zero Data Retention (ZDR), and PrivateLink configurations, satisfying baseline compliance is only the first step in enterprise AI deployment.
+
+IntelliFlow OS explicitly standardizes on Azure OpenAI Service to ensure deployments remain entirely within the organization's existing sovereign cloud perimeter. By leveraging Azure, IntelliFlow OS natively inherits the enterprise's pre-approved Virtual Networks (VNets), Microsoft Entra ID Role-Based Access Control (RBAC), Azure Key Vault Customer-Managed Keys (CMK), and existing Microsoft cloud billing commitments (MACC).
+
+This architectural standard eliminates the immense InfoSec, Legal, and Procurement friction of onboarding a net-new Tier-1 data sub-processor, ensuring that AI workloads are governed by the exact same centralized security and identity policies as the rest of the enterprise infrastructure.
 
 | Attribute | Detail |
 |-----------|--------|

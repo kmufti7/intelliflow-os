@@ -11,9 +11,11 @@ This document explains the technology choices made for IntelliFlow OS and the ra
 | Anthropic Claude | No | Strong alternative, but Azure relationship already established |
 | Open Source (Llama, Mistral) | No | Self-hosting complexity, less suitable for production-grade reference architecture |
 
-**Key Factor:** Azure OpenAI offers the same GPT-4 models with enterprise compliance features (BAA, data residency, private endpoints). For regulated industries, this matters.
+While foundational model providers (including direct OpenAI Enterprise) now offer BAA eligibility, Zero Data Retention (ZDR), and PrivateLink configurations, satisfying baseline compliance is only the first step in enterprise AI deployment.
 
-Designed for Azure OpenAI Service (BAA-eligible) to meet enterprise compliance requirements for regulated industries.
+IntelliFlow OS explicitly standardizes on Azure OpenAI Service to ensure deployments remain entirely within the organization's existing sovereign cloud perimeter. By leveraging Azure, IntelliFlow OS natively inherits the enterprise's pre-approved Virtual Networks (VNets), Microsoft Entra ID Role-Based Access Control (RBAC), Azure Key Vault Customer-Managed Keys (CMK), and existing Microsoft cloud billing commitments (MACC).
+
+This architectural standard eliminates the immense InfoSec, Legal, and Procurement friction of onboarding a net-new Tier-1 data sub-processor, ensuring that AI workloads are governed by the exact same centralized security and identity policies as the rest of the enterprise infrastructure.
 
 ---
 

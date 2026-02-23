@@ -46,6 +46,8 @@ IntelliFlow OS is a governed agent runtime where **LLMs extract and explain, but
 - **Full Audit Trail:** Every decision logged with evidence, cost, and reasoning via Pydantic-enforced schemas.
 - **Cost Controls:** 5-layer optimization (caching, model tiering, regex-first extraction, session caps, batch processing).
 - **Chaos Engineering:** Built-in failure injection to prove graceful degradation before production.
+- **Kill-Switch Governance (v2):** KillSwitchGuard — a deterministic circuit-breaker that halts LLM workflow execution when governance rules fail. Not a soft warning; a hard stop with a structured audit payload listing every failed rule. Fail-closed: the system blocks on any rule evaluation error rather than silently continuing.
+- **Tamper-Evident Audit Trail (v2):** WORMLogRepository — an HMAC-SHA256 hash-chained, append-only audit log that cannot be rewritten even by a DBA without the cryptographic key. Every governance event is permanently recorded with SQLite-enforced Write-Once immutability. If the log write fails, the workflow halts — no unlogged AI decision can proceed.
 - **Enterprise Evidence Pack:** 18 docs mapped to NIST AI RMF, OWASP LLM Top 10, EU AI Act record-keeping, SR 11-7 model risk management.
 
 ---
@@ -98,6 +100,11 @@ Enterprise AI platforms fail when only the original builder can operate them. Th
 ## License
 
 Apache 2.0 — Open source for transparency. Enterprise-friendly. No copyleft concerns.
+
+**Known gap — Data Lifecycle Management (DLM):**
+The token_ledger table is append-only with no TTL. Production deployments require a
+DLM policy (e.g., 90-day archival to cold storage). Not currently implemented.
+Phase 2 roadmap item.
 
 ---
 

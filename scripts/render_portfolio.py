@@ -113,12 +113,12 @@ TEMPLATIZE_RULES = [
     ("11 docs", "{{enterprise_docs}} docs", False),
 
     # Verification checks
-    ("59-check automated verification", "{{verification_checks}}-check automated verification", False),
-    ("59-check automated", "{{verification_checks}}-check automated", False),
-    ("59 automated verification checks", "{{verification_checks}} automated verification checks", False),
-    ("59 automated checks", "{{verification_checks}} automated checks", False),
-    ("59 checks", "{{verification_checks}} checks", False),
-    ("59-check", "{{verification_checks}}-check", False),
+    ("137-check automated verification", "{{verification_checks}}-check automated verification", False),
+    ("137-check automated", "{{verification_checks}}-check automated", False),
+    ("137 automated verification checks", "{{verification_checks}} automated verification checks", False),
+    ("137 automated checks", "{{verification_checks}} automated checks", False),
+    ("137 checks", "{{verification_checks}} checks", False),
+    ("137-check", "{{verification_checks}}-check", False),
 
     # SupportFlow specifics
     ("20 banking policies", "{{sf_policies}} banking policies", False),

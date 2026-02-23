@@ -29,7 +29,8 @@
 | AI-generated (ai_test_generator.py) | 35 | Boundary conditions, missing required fields, type validation across 3 Pydantic schemas |
 | NL Log Query (nl_log_query.py) | 15 | Injection attacks (6 patterns), column whitelist, end-to-end query, cost tracking, self-logging |
 | Scaffold Generator (scaffold_generator.py) | 14 | ast.parse() validation, markdown fence stripping, retry logic, cost tracking, end-to-end generation |
-| **Total** | **193** | **158 hand-written + 35 AI-generated** |
+| intelliflow-core v2 (LangGraph runtime) | 23 | Workflow wrapper (15): state validation, interceptor slots, run/compile lifecycle. Kill-switch guard (8): pass, single failure, multi-failure, workflow integration, zero rules, state snapshot, fail-closed (ZeroDivisionError), immutability |
+| **Total** | **216** | **193 v1 legacy (158 hand-written + 35 AI-generated) + 23 v2 LangGraph** |
 
 ## CI/CD
 

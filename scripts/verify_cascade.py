@@ -17,6 +17,7 @@ Checks:
 12. Enterprise doc count consistent across config and filesystem
 13. CLAUDE.md Truth Table enterprise_docs matches portfolio_config.yaml
 14. ARCHITECTURE.md contains required middleware architecture terms
+15. Git sync status — warns on uncommitted changes or unpushed commits (does not fail)
 """
 
 import io
@@ -60,7 +61,7 @@ STORY_TERMS = {
     "F": ["tests that lie", "integration test", "12.*unit", "3 integration", "real entry point"],
     "G": ["chaos mode", "resilience", "failure injection", "graceful", "audit"],
     "H": ["FHIR", "dual-mode", "LOINC", "4548-4", "adapter pattern", "Bundle"],
-    "I": ["enterprise", "18 docs", "59.*checks", "NIST", "OWASP", "verify_enterprise"],
+    "I": ["enterprise", "18 docs", "\\d+.*checks", "NIST", "OWASP", "verify_enterprise"],
     "J": ["AI test generator", "schema-aware", "35.*generated", "Pydantic.*test", "edge-case"],
     "K": ["NL log query", "natural language.*log", "SQL WHERE"],
     "L": ["scaffold generator", "boilerplate", "ast.parse"],
@@ -276,10 +277,10 @@ def check_changelog_freshness():
 
 
 def run_enterprise_verification():
-    """Run verify_enterprise_docs.py if it exists."""
+    """Run verify_enterprise_docs.py if it exists. Returns (issues, summary_string)."""
     script = REPO_ROOT / "scripts" / "verify_enterprise_docs.py"
     if not script.exists():
-        return ["verify_enterprise_docs.py not found"]
+        return (["verify_enterprise_docs.py not found"], "")
 
     try:
         result = subprocess.run(
@@ -289,12 +290,19 @@ def run_enterprise_verification():
             cwd=str(REPO_ROOT),
             timeout=60,
         )
+        # Parse summary line from stdout (e.g. "  137 passed, 0 failed, 137 total")
+        summary = ""
+        for line in result.stdout.splitlines():
+            m = re.search(r"(\d+)\s+passed,\s+(\d+)\s+failed,\s+(\d+)\s+total", line)
+            if m:
+                summary = f"{m.group(1)} passed, {m.group(2)} failed, {m.group(3)} total"
+                break
         if result.returncode != 0:
-            return [f"verify_enterprise_docs.py failed:\n{result.stdout}\n{result.stderr}"]
+            return ([f"verify_enterprise_docs.py failed:\n{result.stdout}\n{result.stderr}"], summary)
     except subprocess.TimeoutExpired:
-        return ["verify_enterprise_docs.py timed out (60s)"]
+        return (["verify_enterprise_docs.py timed out (60s)"], "")
 
-    return []
+    return ([], summary)
 
 
 README_MD = REPO_ROOT / "README.md"
@@ -486,6 +494,33 @@ def check_architecture_required_terms():
     return issues
 
 
+def check_git_sync_status():
+    """Check for uncommitted changes and unpushed commits. Warning only."""
+    warnings = []
+    try:
+        # Uncommitted changes
+        status = subprocess.run(
+            ["git", "status", "--porcelain"],
+            capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=10,
+        )
+        if status.returncode == 0 and status.stdout.strip():
+            changed = len(status.stdout.strip().splitlines())
+            warnings.append(f"{changed} uncommitted change(s) detected")
+
+        # Unpushed commits
+        log = subprocess.run(
+            ["git", "log", "--oneline", "origin/main..HEAD"],
+            capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=10,
+        )
+        if log.returncode == 0 and log.stdout.strip():
+            commits = len(log.stdout.strip().splitlines())
+            warnings.append(f"{commits} unpushed commit(s) on main")
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        warnings.append("Could not check git status (git not available or timed out)")
+
+    return warnings
+
+
 def main():
     print("=" * 60)
     print("VERIFY CASCADE — IntelliFlow OS Consistency Check")
@@ -573,14 +608,17 @@ def main():
     # 7. Enterprise docs verification
     print("\n📋 Running verify_enterprise_docs.py...")
     checks_run += 1
-    issues = run_enterprise_verification()
+    issues, enterprise_summary = run_enterprise_verification()
     if issues:
         all_issues.extend(issues)
         for i in issues:
             print(f"  ❌ {i}")
     else:
         checks_passed += 1
-        print(f"  ✅ Enterprise docs verification passed (59/59)")
+        if enterprise_summary:
+            print(f"  ✅ Enterprise docs verification passed ({enterprise_summary})")
+        else:
+            print(f"  ✅ Enterprise docs verification passed")
 
     # 8. README test total
     print("\n🔢 Checking README.md test total...")
@@ -665,6 +703,15 @@ def main():
     else:
         checks_passed += 1
         print(f"  ✅ ARCHITECTURE.md contains all required middleware terms")
+
+    # 15. Git sync status (warning only — does not fail)
+    print("\n🔄 Checking git sync status...")
+    git_warnings = check_git_sync_status()
+    if git_warnings:
+        for w in git_warnings:
+            print(f"  ⚠️  WARNING: {w}")
+    else:
+        print(f"  ✅ Working tree clean, no unpushed commits")
 
     # Summary
     print("\n" + "=" * 60)
