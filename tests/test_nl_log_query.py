@@ -25,8 +25,11 @@ import pytest
 # Add tools/ to path so we can import nl_log_query
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
 
+import nl_log_query as nlq_mod
+
 from nl_log_query import (
     KNOWN_COLUMNS,
+    CREATE_TABLE_SQL,
     LOG_TABLE,
     QueryValidationError,
     ensure_log_store,
@@ -55,7 +58,7 @@ def make_mock_client(where_clause: str, tokens_in: int = 50, tokens_out: int = 2
 
 def seed_log_entries(db_path: Path):
     """Insert sample log entries for end-to-end testing."""
-    conn = ensure_log_store(db_path)
+    conn = nlq_mod.ensure_log_store(db_path)
     rows = [
         ("evt-001", "classification", "SupportFlow", "INFO", "hello",
          "POSITIVE", 10, 5, 0.001, "gpt-4o-mini", "2026-02-12T10:00:00"),
@@ -77,6 +80,31 @@ def seed_log_entries(db_path: Path):
     )
     conn.commit()
     conn.close()
+
+
+class _NonClosingConnection:
+    """Connection proxy that keeps an in-memory DB alive across nl_query() calls."""
+
+    def __init__(self, conn: sqlite3.Connection):
+        self._conn = conn
+
+    def __getattr__(self, name):
+        return getattr(self._conn, name)
+
+    def close(self):
+        # nl_query() always closes in finally; keep connection alive for assertions.
+        return None
+
+
+def setup_inmemory_store(monkeypatch: pytest.MonkeyPatch) -> sqlite3.Connection:
+    """Create an in-memory audit log store and patch ensure_log_store to use it."""
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.execute(CREATE_TABLE_SQL)
+    conn.commit()
+    wrapped = _NonClosingConnection(conn)
+    monkeypatch.setattr(nlq_mod, "ensure_log_store", lambda _db_path: wrapped)
+    return conn
 
 
 # ---------------------------------------------------------------------------
@@ -151,9 +179,9 @@ def test_column_whitelist_all_known_columns():
 # 10-11. Edge cases
 # ---------------------------------------------------------------------------
 
-def test_empty_query_returns_error(tmp_path):
+def test_empty_query_returns_error():
     """An empty query string should return an error without calling the LLM."""
-    result = nl_query("", db_path=tmp_path / "test.db")
+    result = nl_query("", db_path=Path("ignored.db"))
     assert result["validation_passed"] is False
     assert result["error"] == "Empty query provided"
     assert result["results"] == []
@@ -180,75 +208,81 @@ def test_injection_subquery_blocked():
 # 13. Happy path end-to-end with mocked LLM
 # ---------------------------------------------------------------------------
 
-def test_happy_path_end_to_end(tmp_path):
+def test_happy_path_end_to_end(monkeypatch):
     """Full pipeline: mock LLM -> validation -> execution against seeded data."""
-    db_path = tmp_path / "test.db"
-    seed_log_entries(db_path)
+    conn = setup_inmemory_store(monkeypatch)
+    try:
+        seed_log_entries(Path("ignored.db"))
 
-    # Mock LLM returns a valid WHERE clause matching CareFlow errors
-    mock_client = make_mock_client("level = 'ERROR' AND module = 'CareFlow'")
+        # Mock LLM returns a valid WHERE clause matching CareFlow errors
+        mock_client = make_mock_client("level = 'ERROR' AND module = 'CareFlow'")
 
-    result = nl_query("show me CareFlow errors", db_path=db_path, client=mock_client)
+        result = nl_query("show me CareFlow errors", db_path=Path("ignored.db"), client=mock_client)
 
-    assert result["validation_passed"] is True
-    assert result["error"] is None
-    assert len(result["results"]) == 1
-    assert result["results"][0]["id"] == "evt-002"
-    assert result["results"][0]["module"] == "CareFlow"
-    assert result["results"][0]["level"] == "ERROR"
-    assert result["where_clause"] == "level = 'ERROR' AND module = 'CareFlow'"
+        assert result["validation_passed"] is True
+        assert result["error"] is None
+        assert len(result["results"]) == 1
+        assert result["results"][0]["id"] == "evt-002"
+        assert result["results"][0]["module"] == "CareFlow"
+        assert result["results"][0]["level"] == "ERROR"
+        assert result["where_clause"] == "level = 'ERROR' AND module = 'CareFlow'"
+    finally:
+        conn.close()
 
 
 # ---------------------------------------------------------------------------
 # 14. Cost tracking
 # ---------------------------------------------------------------------------
 
-def test_cost_tracking_computed(tmp_path):
+def test_cost_tracking_computed(monkeypatch):
     """Cost should be computed from token counts using gpt-4o-mini pricing."""
-    db_path = tmp_path / "test.db"
-    seed_log_entries(db_path)
+    conn = setup_inmemory_store(monkeypatch)
+    try:
+        seed_log_entries(Path("ignored.db"))
 
-    mock_client = make_mock_client(
-        "level = 'INFO'", tokens_in=100, tokens_out=50
-    )
+        mock_client = make_mock_client(
+            "level = 'INFO'", tokens_in=100, tokens_out=50
+        )
 
-    result = nl_query("show info logs", db_path=db_path, client=mock_client)
+        result = nl_query("show info logs", db_path=Path("ignored.db"), client=mock_client)
 
-    assert result["cost"]["tokens_in"] == 100
-    assert result["cost"]["tokens_out"] == 50
-    # gpt-4o-mini: $0.15/1M input + $0.60/1M output
-    expected_cost = (100 * 0.00000015) + (50 * 0.0000006)
-    assert abs(result["cost"]["cost_usd"] - expected_cost) < 1e-10
+        assert result["cost"]["tokens_in"] == 100
+        assert result["cost"]["tokens_out"] == 50
+        # gpt-4o-mini: $0.15/1M input + $0.60/1M output
+        expected_cost = (100 * 0.00000015) + (50 * 0.0000006)
+        assert abs(result["cost"]["cost_usd"] - expected_cost) < 1e-10
+    finally:
+        conn.close()
 
 
 # ---------------------------------------------------------------------------
 # 15. Query attempt logged for governance
 # ---------------------------------------------------------------------------
 
-def test_query_attempt_logged(tmp_path):
+def test_query_attempt_logged(monkeypatch):
     """Every query attempt should be logged to the audit_logs table."""
-    db_path = tmp_path / "test.db"
-    seed_log_entries(db_path)
+    conn = setup_inmemory_store(monkeypatch)
+    try:
+        seed_log_entries(Path("ignored.db"))
 
-    mock_client = make_mock_client("module = 'SupportFlow'")
-    nl_query("show SupportFlow logs", db_path=db_path, client=mock_client)
+        mock_client = make_mock_client("module = 'SupportFlow'")
+        nl_query("show SupportFlow logs", db_path=Path("ignored.db"), client=mock_client)
 
-    # Reopen the database and check for the governance log entry
-    conn = sqlite3.connect(str(db_path))
-    conn.row_factory = sqlite3.Row
-    cursor = conn.execute(
-        f"SELECT * FROM {LOG_TABLE} WHERE event_type = 'nl_log_query'"
-    )
-    log_entries = [dict(row) for row in cursor.fetchall()]
-    conn.close()
+        # Query the same in-memory database for the governance log entry.
+        cursor = conn.execute(
+            f"SELECT * FROM {LOG_TABLE} WHERE event_type = 'nl_log_query'"
+        )
+        log_entries = [dict(row) for row in cursor.fetchall()]
 
-    assert len(log_entries) == 1
-    entry = log_entries[0]
-    assert entry["module"] == "core"
-    assert entry["event_type"] == "nl_log_query"
-    assert entry["input"] == "show SupportFlow logs"
+        assert len(log_entries) == 1
+        entry = log_entries[0]
+        assert entry["module"] == "core"
+        assert entry["event_type"] == "nl_log_query"
+        assert entry["input"] == "show SupportFlow logs"
 
-    # The output field contains JSON with the generated SQL
-    output_data = json.loads(entry["output"])
-    assert output_data["sql"] == "module = 'SupportFlow'"
-    assert output_data["valid"] is True
+        # The output field contains JSON with the generated SQL
+        output_data = json.loads(entry["output"])
+        assert output_data["sql"] == "module = 'SupportFlow'"
+        assert output_data["valid"] is True
+    finally:
+        conn.close()

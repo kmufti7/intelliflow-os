@@ -67,7 +67,7 @@ Each release includes:
 | **Modules** | SupportFlow (banking) + CareFlow (healthcare) |
 | **SDK** | intelliflow-core — pip-installable shared governance SDK with 3 Pydantic contracts |
 | **Stories** | 12 stories (A–L) built and cascaded |
-| **Tests** | 193 total (158 hand-written + 35 AI-generated) across 4 repositories |
+| **Tests** | 193 total at v1.0 release (158 hand-written + 35 AI-generated); current platform total: 253 |
 | **Enterprise Evidence Pack** | 18 documents mapped to NIST AI RMF, OWASP LLM Top 10, EU AI Act record-keeping, SR 11-7 |
 | **Developer Tools** | 3 tools (AI test generator, NL log query, scaffold generator) |
 | **Verification** | 138 automated checks (enterprise docs) + 15-check cascade verification |

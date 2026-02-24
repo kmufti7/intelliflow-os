@@ -14,7 +14,7 @@ v1.0 is the foundation: two production-ready modules, a shared governance SDK, a
 |----------|-------------|
 | **Modules** | SupportFlow (banking policy routing) + CareFlow (clinical gap analysis) |
 | **Stories** | 12 stories (A–L) built and cascaded across platform |
-| **Tests** | 193 total (158 hand-written + 35 AI-generated) across 4 repositories |
+| **Tests** | 253 total (193 v1 legacy + 60 v2 LangGraph) across 4 repositories |
 | **Enterprise Evidence Pack** | 18 documents mapped to NIST AI RMF, OWASP LLM Top 10, EU AI Act, SR 11-7 |
 | **Developer Tools** | 3 tools: AI test generator, NL log query, scaffold generator |
 | **SDK** | intelliflow-core — pip-installable shared governance SDK with 3 Pydantic contracts |

@@ -165,7 +165,7 @@ Self-hosting adds operational complexity without improving the compliance postur
 
 - **Regex-first extraction** reduces LLM calls by handling structured data extraction before LLM fallback. In CareFlow, regex extraction achieves 100% success rate on test patients — the LLM fallback is never triggered for extraction.
 - **Structured outputs** (enum classification, typed fields) reduce output token count by constraining response format.
-- **Model tiering** uses gpt-4o-mini (10x cheaper than gpt-4o) for all operations where reasoning capability is not the bottleneck.
+- **Model tiering** uses gpt-4o-mini for operations where reasoning capability is not the bottleneck, with materially lower unit pricing than gpt-4o under typical provider list rates.
 
 These architectural decisions reduce per-interaction LLM cost, which shifts the FinOps calculus toward token-based billing for most deployments. PTUs become cost-effective only at sustained high-volume production workloads (thousands of interactions per hour).
 
