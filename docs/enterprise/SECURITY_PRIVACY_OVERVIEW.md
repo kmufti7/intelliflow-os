@@ -41,6 +41,10 @@ The deterministic reasoning pattern ("LLM extracts, code decides, LLM explains")
 ### Runtime Kill-Switch (v2)
 KillSwitchGuard is a deterministic interceptor node in the v2 LangGraph runtime that evaluates GovernanceRule contracts before any LLM node executes. If any rule fails, the workflow halts with a structured audit payload (failed rules + state snapshot). The system defaults to blocking on rule evaluation errors (fail-closed), preventing uncontrolled inference when a governance check cannot be evaluated. This limits the blast radius of any single LLM call — if a data residency rule or cost threshold rule cannot confirm compliance, the workflow stops.
 
+### OFAC/SIU Sanctions Compliance (ClaimsFlow)
+
+ClaimsFlow implements automated sanctions compliance via KillSwitchGuard edge interceptor. The fraud_score node calls an MCP-scoped `registry_lookup` tool to check claimant identity against OFAC/SIU sanctions registries. If `fraud_flag == True`, the Kill-Switch GovernanceRule (`sanctions_check`) halts the workflow before the adjudication node executes — preventing any automated decision on a sanctioned entity. This is a structural guarantee: the adjudication code path is physically unreachable when sanctions are flagged. WORM audit log captures KILL_SWITCH_TRIGGERED with the failed rule set and full state snapshot for compliance review.
+
 ### Audit Logging on All Data Access Paths
 Every data access — patient retrieval, guideline lookup, LLM call, cost event, chaos injection — is logged via Pydantic-validated audit schemas. The NL Log Query developer tool enables natural language queries against these logs (e.g., "Show me all escalations from last week") with SQL injection prevention (column whitelist, 13 blocked keywords).
 

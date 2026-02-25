@@ -102,6 +102,31 @@ Event types logged to the WORM audit log:
 
 Each entry is HMAC-SHA256 hash-chained to the previous entry. `verify_chain()` recomputes all hashes sequentially from the GENESIS anchor to detect tampering. DatabaseSessionManager with WAL journaling mode prevents write contention on the shared SQLite database.
 
+### ClaimsFlow WORM Events
+
+ClaimsFlow (intelliflow-claimsflow) extends the WORM audit trail with insurance-specific events:
+
+| Event Type | When | Payload |
+|------------|------|---------|
+| INTAKE_COMPLETE | After claim extraction | claim_id, claimant_id, claimant_name, claim_type, amount |
+| FRAUD_SCORE_COMPLETE | After risk assessment | claim_id, fraud_score, fraud_flag |
+| KILL_SWITCH_TRIGGERED | When OFAC/SIU sanctions check fires | trace_id, failed_rules (sanctions_check), state_snapshot |
+| ADJUDICATION_COMPLETE | After threshold-based decision | fraud_score, decision (APPROVED/ESCALATE/DENIED) |
+
+The Kill-Switch interceptor sits between fraud_score and adjudication — if `fraud_flag == True`, KILL_SWITCH_TRIGGERED fires and adjudication never executes. This is observable in the WORM log as a missing ADJUDICATION_COMPLETE event for halted workflows.
+
+### Executive Single Pane of Glass (SPOG)
+
+The SPOG dashboard (Streamlit) provides executive-level observability across ClaimsFlow workflow executions. Three-column layout:
+
+| Column | Content | Data Source |
+|--------|---------|-------------|
+| Governance State | Kill-Switch status, failed rules, workflow outcome | WORMLogRepository |
+| Audit Trail | Chronological WORM events with trace_id correlation | WORMLogRepository |
+| Cost Ledger | Per-node token spend, partial execution cost visibility | TokenLedgerRepository |
+
+SPOG consumes the same audit primitives (WORMLogRepository, TokenLedgerRepository) that power the v2 runtime — no separate data pipeline. When a Kill-Switch fires, the Cost Ledger column shows receipts only for nodes that executed (intake + fraud_score), visually confirming governance halt.
+
 Token FinOps is implemented in intelliflow-core v2 as TokenLedgerRepository. Every LLM invocation writes an immutable cost receipt to the ledger at point-in-time pricing. Costs are never recalculated after write — historical records reflect the USD cost at execution time, preventing pricing drift from corrupting financial audit trails. WORM audit events and FinOps ledger entries share the same SQLite session manager, ensuring atomic observability across both subsystems.
 
 ### Error Handling

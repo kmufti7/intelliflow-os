@@ -93,7 +93,7 @@ def get_built_stories():
     content = read_file(CLAUDE_MD)
     built = []
     for line in content.split("\n"):
-        match = re.match(r"\|\s*([A-L])\s*\|.*\|\s*.*Built", line)
+        match = re.match(r"\|\s*([A-M])\s*\|.*\|\s*.*Built", line)
         if match and "NOT BUILT" not in line:
             built.append(match.group(1))
     return built
@@ -104,7 +104,7 @@ def get_not_built_stories():
     content = read_file(CLAUDE_MD)
     not_built = []
     for line in content.split("\n"):
-        match = re.match(r"\|\s*([A-L])\s*\|.*NOT\s*BUILT", line)
+        match = re.match(r"\|\s*([A-M])\s*\|.*NOT\s*BUILT", line)
         if match:
             not_built.append(match.group(1))
     return not_built

@@ -88,7 +88,7 @@ check_exists_and_nonempty("COST_MODEL.md")
 # --- TEST_STRATEGY.md ---
 content = check_exists_and_nonempty("TEST_STRATEGY.md")
 if content:
-    expected_total = str(config["metrics"]["total_tests"])
+    expected_total = str(config["metrics"]["total_ecosystem"])
     check_contains("TEST_STRATEGY.md", content, expected_total)
 
 # --- DATA_DICTIONARY.md ---
@@ -359,35 +359,51 @@ for filename, keywords in TOKEN_LEDGER_COVERAGE.items():
 
 
 # --- Test count consistency in enterprise/strategy docs ---
-expected_tests = config["metrics"]["total_tests"]
-test_count_files = [
-    "DEVELOPER_EXPERIENCE_STRATEGY.md",
+# Federated schema: portfolio/executive docs validate against total_ecosystem (276),
+# repo-specific docs validate against platform_core (253).
+total_ecosystem = config["metrics"]["total_ecosystem"]
+platform_core = config["metrics"]["platform_core"]
+
+# Scope 1: Portfolio docs → total_ecosystem (276)
+ecosystem_test_count_files = [
     os.path.join("portfolio_writeup", "01_executive_summary.md"),
     os.path.join("portfolio_writeup", "03_product_strategy.md"),
+]
+
+# Scope 2: Repo-specific docs → platform_core (253)
+platform_test_count_files = [
+    "DEVELOPER_EXPERIENCE_STRATEGY.md",
     os.path.join("docs", "enterprise", "PRODUCT_ROADMAP.md"),
 ]
+
 test_count_patterns = [
     re.compile(r"\b(\d+)\s+tests?\s+(?:already\s+)?passing\b"),
-    re.compile(r"\b(\d+)\s+total\s+tests\b"),
+    re.compile(r"\b(\d+)\s+total\s+(?:ecosystem\s+)?tests\b"),
     re.compile(r"\*\*(\d+)\s+(?:passing\s+)?tests?\*\*"),
 ]
 
-for doc in test_count_files:
-    fpath = os.path.join(REPO_ROOT, doc)
-    if not os.path.isfile(fpath):
-        continue
-    fname = os.path.basename(doc)
-    with open(fpath, "r", encoding="utf-8") as f:
-        lines = f.readlines()
-    for line_num, line in enumerate(lines, start=1):
-        for pat in test_count_patterns:
-            for m in pat.finditer(line):
-                found = int(m.group(1))
-                check(
-                    f"{fname}:{line_num} test count = {expected_tests}",
-                    found == expected_tests,
-                    f"found {found}, expected {expected_tests}" if found != expected_tests else "",
-                )
+
+def _check_test_counts(doc_list, expected, scope_label):
+    for doc in doc_list:
+        fpath = os.path.join(REPO_ROOT, doc)
+        if not os.path.isfile(fpath):
+            continue
+        fname = os.path.basename(doc)
+        with open(fpath, "r", encoding="utf-8") as f:
+            lines = f.readlines()
+        for line_num, line in enumerate(lines, start=1):
+            for pat in test_count_patterns:
+                for m in pat.finditer(line):
+                    found = int(m.group(1))
+                    check(
+                        f"{fname}:{line_num} test count ({scope_label}) = {expected}",
+                        found == expected,
+                        f"found {found}, expected {expected}" if found != expected else "",
+                    )
+
+
+_check_test_counts(ecosystem_test_count_files, total_ecosystem, "ecosystem")
+_check_test_counts(platform_test_count_files, platform_core, "platform_core")
 
 
 # --- Stale verification count in portfolio files ---
@@ -479,6 +495,92 @@ if completed_steps:
                             False,
                             f"Step {step_num} is complete per config but line contains stale planned/future language",
                         )
+
+
+# --- Semantic coverage: ClaimsFlow cascade across docs ---
+CLAIMSFLOW_COVERAGE = {
+    "GOVERNANCE.md": ["ClaimsFlow"],
+    "OBSERVABILITY.md": ["ClaimsFlow"],
+    "TEST_STRATEGY.md": ["ClaimsFlow"],
+    "ARCHITECTURE.md": ["ClaimsFlow"],
+}
+
+for filename, keywords in CLAIMSFLOW_COVERAGE.items():
+    content = read_file(filename)
+    if content is None:
+        for kw in keywords:
+            check(f'{filename} contains "{kw}"', False, "file not found")
+    else:
+        for kw in keywords:
+            check_contains(filename, content, kw)
+
+
+# --- Semantic coverage: SPOG / Single Pane of Glass ---
+SPOG_COVERAGE = {
+    "OBSERVABILITY.md": [("Single Pane of Glass", "SPOG")],
+    "portfolio_writeup/02_technical_deep_dive.md": [("Single Pane of Glass", "SPOG")],
+}
+
+for filename, keyword_groups in SPOG_COVERAGE.items():
+    content = read_file(filename)
+    if content is None:
+        for group in keyword_groups:
+            check(f'{filename} contains "SPOG"', False, "file not found")
+    else:
+        for group in keyword_groups:
+            found = any(kw in content for kw in group)
+            check(f'{filename} contains "SPOG" or "Single Pane of Glass"', found)
+
+
+# --- Semantic coverage: federated test tracking ---
+FEDERATED_COVERAGE = {
+    "portfolio_writeup/01_executive_summary.md": [("federated", "276")],
+    "README.md": [("federated", "276")],
+}
+
+for filename, keyword_groups in FEDERATED_COVERAGE.items():
+    content = read_file(filename)
+    if content is None:
+        for group in keyword_groups:
+            check(f'{filename} contains "federated" or "276"', False, "file not found")
+    else:
+        for group in keyword_groups:
+            found = any(kw in content for kw in group)
+            check(f'{filename} contains "federated" or "276"', found)
+
+
+# --- Semantic coverage: OFAC / sanctions ---
+OFAC_COVERAGE = {
+    "docs/enterprise/SECURITY_PRIVACY_OVERVIEW.md": [("OFAC", "sanctions")],
+    "docs/enterprise/SR_11_7_MODEL_RISK_MANAGEMENT.md": [("OFAC", "sanctions")],
+}
+
+for filename, keyword_groups in OFAC_COVERAGE.items():
+    content = read_file(filename)
+    if content is None:
+        for group in keyword_groups:
+            check(f'{filename} contains "OFAC" or "sanctions"', False, "file not found")
+    else:
+        for group in keyword_groups:
+            found = any(kw in content for kw in group)
+            check(f'{filename} contains "OFAC" or "sanctions"', found)
+
+
+# --- Semantic coverage: Kill-Switch in governance/observability ---
+KILLSWITCH_GOVERNANCE_COVERAGE = {
+    "GOVERNANCE.md": [("KillSwitch", "Kill-Switch")],
+    "OBSERVABILITY.md": [("KillSwitch", "Kill-Switch")],
+}
+
+for filename, keyword_groups in KILLSWITCH_GOVERNANCE_COVERAGE.items():
+    content = read_file(filename)
+    if content is None:
+        for group in keyword_groups:
+            check(f'{filename} contains "KillSwitch" or "Kill-Switch"', False, "file not found")
+    else:
+        for group in keyword_groups:
+            found = any(kw in content for kw in group)
+            check(f'{filename} contains "KillSwitch" or "Kill-Switch"', found)
 
 
 # --- Report ---

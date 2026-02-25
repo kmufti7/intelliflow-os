@@ -43,6 +43,7 @@ Reference: [NIST AI RMF 1.0](https://www.nist.gov/artificial-intelligence/risk-m
 | CI/CD gates | GitHub Actions runs full test suite on every push; no merge without green |
 | Deterministic routing | Enum-based classification prevents unpredictable agent behavior |
 | Kill-switch guard | Deterministic KillSwitchGuard interceptor evaluates GovernanceRule contracts (self-documenting, required description field) at graph level. Fail-closed: rule exceptions treated as failures. Collect-all-failures: full failure set for audit. Structured WorkflowResult replaces raw exception propagation. Aligns with SR 11-7 kill-switch mandate. |
+| ClaimsFlow Kill-Switch interceptor | ClaimsFlow wires KillSwitchGuard as an edge interceptor between fraud_score and adjudication nodes. GovernanceRule `sanctions_check`: if claimant flagged in OFAC/SIU registry (`fraud_flag == True`), workflow halts before adjudication. WORM logs KILL_SWITCH_TRIGGERED with failed_rules and state_snapshot. Demonstrates Kill-Switch in an agentic LangGraph workflow with real-world compliance trigger. |
 | WORM audit log | WORMLogRepository: HMAC-SHA256 hash-chained append-only audit log. SQLite BEFORE UPDATE/DELETE triggers enforce Write-Once at DB layer. Fail-closed WORMStorageError halts workflow on write failure. Session-bounded trace_id links WORKFLOW_START, WORKFLOW_END, TOOL_EXECUTED, KILL_SWITCH_TRIGGERED. Satisfies SR 11-7 and SEC 17a-4. |
 
 ## Governance UI

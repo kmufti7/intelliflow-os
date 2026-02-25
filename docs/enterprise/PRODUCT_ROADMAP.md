@@ -12,13 +12,13 @@ v1.0 is the foundation: two production-ready modules, a shared governance SDK, a
 
 | Category | What's Live |
 |----------|-------------|
-| **Modules** | SupportFlow (banking policy routing) + CareFlow (clinical gap analysis) |
-| **Stories** | 12 stories (A–L) built and cascaded across platform |
-| **Tests** | 253 total (193 v1 legacy + 60 v2 LangGraph) across 4 repositories |
+| **Modules** | SupportFlow (banking) + CareFlow (healthcare) + ClaimsFlow (insurance — LangGraph-native, OFAC/SIU Kill-Switch, SPOG dashboard) |
+| **Stories** | 13 stories (A–M) built and cascaded across platform |
+| **Tests** | 276 total ecosystem (253 platform-core + 23 ClaimsFlow) across 5 repositories |
 | **Enterprise Evidence Pack** | 18 documents mapped to NIST AI RMF, OWASP LLM Top 10, EU AI Act, SR 11-7 |
 | **Developer Tools** | 3 tools: AI test generator, NL log query, scaffold generator |
 | **SDK** | intelliflow-core — pip-installable shared governance SDK with 3 Pydantic contracts |
-| **Verification** | 138 automated checks (enterprise docs) + 15-check cascade verification |
+| **Verification** | 150 automated checks (enterprise docs) + 15-check cascade verification |
 | **Deterministic Reasoning** | LLM extracts, code decides, LLM explains — no LLM authority over clinical or policy decisions |
 | **Data Residency** | PHI stays local (FAISS). Only de-identified concepts reach cloud services (Pinecone) |
 | **Chaos Engineering** | Failure injection for FAISS, Pinecone, and database with graceful fallback and audit logging |

@@ -94,7 +94,8 @@ flowchart TD
 | NL Log Query | Platform | Natural language audit log search, SQL injection prevention | 15 | This repo |
 | Scaffold Generator | Platform | LLM generates platform-compliant code, ast.parse() validates | 14 | This repo |
 | v2 LangGraph Governed Runtime | Platform | Kill-switch, MCP registry, WORM audit, Token FinOps | 60 | [intelliflow-core](https://github.com/kmufti7/intelliflow-core) |
-| **Total** | | | **253** | **193 v1 legacy + 60 v2 LangGraph** |
+| [ClaimsFlow](https://github.com/kmufti7/intelliflow-claimsflow) | Insurance | Agentic claims processing, Kill-Switch interceptor, OFAC/SIU | 23 | [View](https://github.com/kmufti7/intelliflow-claimsflow) |
+| **Total** | | | **276** | **253 platform-core + 23 ClaimsFlow (federated tracking)** |
 
 ---
 
@@ -187,7 +188,7 @@ python care_app.py --mode=enterprise
 
 | Metric | Value |
 |--------|-------|
-| Total tests | 253 (193 v1 legacy + 60 v2 LangGraph) |
+| Total ecosystem tests | 276 (253 platform-core + 23 ClaimsFlow) |
 | Test coverage | Extraction, reasoning, routing, chaos, PHI safety, FHIR, schema validation |
 
 ---
@@ -220,6 +221,9 @@ git clone https://github.com/kmufti7/intelliflow-supportflow.git
 
 # Healthcare module
 git clone https://github.com/kmufti7/intelliflow-careflow.git
+
+# Insurance module
+git clone https://github.com/kmufti7/intelliflow-claimsflow.git
 ```
 
 ### Run SupportFlow (Banking)
@@ -249,6 +253,7 @@ streamlit run care_app.py
 | intelliflow-core | Platform SDK | [github.com/kmufti7/intelliflow-core](https://github.com/kmufti7/intelliflow-core) |
 | intelliflow-supportflow | Banking AI Assistant | [github.com/kmufti7/intelliflow-supportflow](https://github.com/kmufti7/intelliflow-supportflow) |
 | intelliflow-careflow | Healthcare AI Assistant | [github.com/kmufti7/intelliflow-careflow](https://github.com/kmufti7/intelliflow-careflow) |
+| intelliflow-claimsflow | Insurance Claims Processing | [github.com/kmufti7/intelliflow-claimsflow](https://github.com/kmufti7/intelliflow-claimsflow) |
 
 ---
 

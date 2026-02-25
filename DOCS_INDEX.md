@@ -45,6 +45,7 @@ This index is the fastest way to review enterprise readiness signals.
 |--------|------------|
 | SupportFlow (Banking) | [intelliflow-supportflow](https://github.com/kmufti7/intelliflow-supportflow) |
 | CareFlow (Healthcare) | [intelliflow-careflow](https://github.com/kmufti7/intelliflow-careflow) |
+| ClaimsFlow (Insurance) | [intelliflow-claimsflow](https://github.com/kmufti7/intelliflow-claimsflow) |
 
 ## SDK
 | Component | Repository |

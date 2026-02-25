@@ -38,9 +38,9 @@ This document maps SR 11-7 requirements to IntelliFlow OS controls across both m
 |---------------------|---------|----------------------|----------|
 | **Model Development Documentation** | §IV.A | Architecture documented in ARCHITECTURE.md (7 Mermaid diagrams). Data flows, component interactions, and decision boundaries specified. | ARCHITECTURE.md, DATA_DICTIONARY.md |
 | **Conceptual Soundness** | §IV.A.1 | "Code decides, LLM explains" principle separates model outputs (extraction, classification) from business logic (gap computation, policy routing, escalation). LLM is a data processing tool, not a decision-maker. | GOVERNANCE.md §Deterministic Reasoning, ADR_DETERMINISTIC_V1_VS_AGENTIC_V2.md |
-| **Outcome Analysis** | §IV.A.2 | 193 tests (158 hand-written + 35 AI-generated) validate expected outcomes. Regex extraction achieves 100% accuracy on test patients. Gap computation is deterministic — same inputs produce same outputs. | TEST_STRATEGY.md, verify_cascade.py |
+| **Outcome Analysis** | §IV.A.2 | 276 automated ecosystem tests (253 platform-core + 23 ClaimsFlow) validate expected outcomes. Regex extraction achieves 100% accuracy on test patients. Gap computation is deterministic — same inputs produce same outputs. | TEST_STRATEGY.md, verify_cascade.py |
 | **Ongoing Monitoring** | §IV.B | Per-interaction audit logging captures: component, action, timestamp, success/failure, confidence, reasoning, and cost. Governance panel provides real-time visibility. | OBSERVABILITY.md, AuditEventSchema |
-| **Model Validation** | §V | Platform provides 138 automated verification checks and 15 cascade consistency checks. Independent validation (challenger models, backtesting) is the deploying institution's responsibility. | verify_enterprise_docs.py, verify_cascade.py |
+| **Model Validation** | §V | Platform provides 150 automated verification checks and 15 cascade consistency checks. Independent validation (challenger models, backtesting) is the deploying institution's responsibility. | verify_enterprise_docs.py, verify_cascade.py |
 | **Governance & Controls** | §VI | Pydantic-enforced schemas (AuditEventSchema, CostTrackingSchema, GovernanceLogEntry) ensure structured data integrity. No unvalidated data enters or exits the pipeline. | intelliflow-core contracts.py |
 | **Audit Trail** | §VI.B | Every decision logged with evidence chain: input data → extraction result → business logic output → explanation with citations. Queryable via NL Log Query tool. | Governance log, nl_log_query.py |
 | **Change Management** | §VI.C | 15-check cascade verification ensures changes propagate consistently across 4 repositories. CHANGELOG.md tracks version history. Semantic versioning policy documented. | verify_cascade.py, RELEASE_NOTES_VERSIONING.md |
@@ -135,6 +135,10 @@ SR 11-7 §VI states that institutions must have the ability to "limit or cease m
 
 KillSwitchGuard (intelliflow-core v2): Deterministic interceptor node evaluated at the LangGraph graph level before any LLM call. Implements SR 11-7 kill-switch mandate with fail-closed semantics (rule exceptions treated as failures), collect-all-failures audit payload, and self-documenting GovernanceRule contracts (required description field enforced at type level). Raises KillSwitchTriggered with full rule failure set and state snapshot for downstream WORM logging (Step 4).
 
+### ClaimsFlow Kill-Switch — OFAC/SIU Sanctions Intercept
+
+ClaimsFlow (intelliflow-claimsflow) provides a production-pattern implementation of KillSwitchGuard with real-world compliance semantics. The 4-node LangGraph workflow (intake → fraud_score → kill_switch_guard → adjudication) wires the guard as an edge interceptor between risk assessment and decision-making. GovernanceRule `sanctions_check` evaluates `fraud_flag` — set by an MCP-scoped `registry_lookup` tool checking OFAC/SIU sanctions registries. If the claimant is flagged, the workflow halts with KILL_SWITCH_TRIGGERED before adjudication can execute. This demonstrates the SR 11-7 kill-switch mandate in an agentic context: the guard is deterministic code (`lambda s: not s.fraud_flag`), the trigger is an external compliance signal (sanctions registry), and the halt is fail-closed with full audit payload.
+
 ### WORMLogRepository — v2 Implementation (intelliflow-core v2)
 
 WORMLogRepository (intelliflow-core v2): HMAC-SHA256 hash-chained audit log with SQLite-enforced Write-Once immutability. Logs KILL_SWITCH_TRIGGERED events with full GovernanceRule failure list and state snapshot. Fail-closed: WORMStorageError halts workflow if log write fails — no unlogged AI decisions. Session-bounded trace_id enables complete workflow lifecycle reconstruction for SR 11-7 audit. Each log entry chains to the previous entry via HMAC-SHA256 with a KMS-ready secret key — without the key, the chain cannot be mathematically rewritten, providing non-repudiation against database-level tampering. SQLite BEFORE UPDATE/DELETE triggers enforce physical immutability independent of application code. 12 tests validate table creation, trigger enforcement, hash chain integrity, tamper detection, fail-closed behavior, and workflow integration.
@@ -152,8 +156,8 @@ IntelliFlow OS provides architecture patterns and controls. The following SR 11-
 ### 6.1 Independent Model Validation
 
 SR 11-7 requires that model validation be performed by parties independent of model development. IntelliFlow OS provides:
-- 253 automated tests
-- 137 documentation verification checks
+- 276 automated ecosystem tests (253 platform-core + 23 ClaimsFlow)
+- 150 documentation verification checks
 - Deterministic decision paths that are inspectable
 
 The deploying institution must:

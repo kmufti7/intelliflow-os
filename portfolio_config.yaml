@@ -3,8 +3,10 @@
 # Used by render_portfolio.py to replace {{placeholders}} in template files.
 
 metrics:
-  # Test counts
-  total_tests: 253
+  # Test counts — federated schema
+  platform_core: 253
+  claimsflow_lob: 23
+  total_ecosystem: 276
   v1_legacy_tests: 193
   v2_langgraph_tests: 60
   hand_written_tests: 158
@@ -20,7 +22,8 @@ metrics:
 
   # Enterprise docs
   enterprise_docs: 18
-  verification_checks: 138
+  verification_checks: 150
+  total_tests: 276
   cascade_checks: 15
 
   # Build metrics
@@ -54,7 +57,7 @@ metrics:
   embedding_model: "text-embedding-3-small"
 
   # Platform
-  modules: 2
+  modules: 3
   repos: 4
 
 completed_v2_steps:
@@ -68,3 +71,13 @@ completed_v2_steps:
     step: 4
   - name: "TokenLedgerRepository"
     step: 5
+  - name: "ClaimsFlowSPOG"
+    step: 6
+
+modules_detail:
+  claimsflow:
+    name: "ClaimsFlow"
+    description: "Agentic insurance claims processing — LangGraph-native, OFAC/SIU Kill-Switch interceptor"
+    repo: "intelliflow-claimsflow"
+    tests: 23
+    status: "complete"

@@ -83,6 +83,28 @@ flowchart TD
   end
 ```
 
+## ClaimsFlow Flow (LangGraph Agentic Workflow)
+```mermaid
+flowchart TD
+  START[__start__] --> INTAKE[Intake Node<br/>LLM extracts ClaimPayload]
+  INTAKE --> FRAUD[Fraud Score Node<br/>Rule-based + MCP registry lookup]
+  FRAUD --> KS{Kill-Switch Guard<br/>Edge Interceptor}
+  KS -->|Pass: fraud_flag=False| ADJ[Adjudication Node<br/>Threshold-based decision]
+  KS -->|Fail: fraud_flag=True| HALT[WORKFLOW HALTED<br/>KILL_SWITCH_TRIGGERED]
+  ADJ --> END[__end__]
+
+  INTAKE -.->|WORM| W1[INTAKE_COMPLETE]
+  FRAUD -.->|WORM| W2[FRAUD_SCORE_COMPLETE]
+  KS -.->|WORM| W3[KILL_SWITCH_TRIGGERED]
+  ADJ -.->|WORM| W4[ADJUDICATION_COMPLETE]
+
+  INTAKE -.->|FinOps| L1[Token Ledger Receipt]
+  FRAUD -.->|FinOps| L2[Token Ledger Receipt]
+  ADJ -.->|FinOps| L3[Token Ledger Receipt]
+```
+
+The Kill-Switch Guard is wired as a regular LangGraph node (not via `add_interceptor_slot`) — a typed wrapper function ensures LangGraph passes `ClaimsFlowState` (with custom fields) rather than the base `IntelliFlowState`. This architectural choice prevents LangGraph state reconstruction from stripping domain-specific fields (`fraud_score`, `fraud_flag`, `claim_data`).
+
 ## SupportFlow Flow
 ```mermaid
 flowchart TD

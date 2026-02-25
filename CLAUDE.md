@@ -14,13 +14,15 @@ These facts are verified. Do NOT contradict them in any output.
 
 | Claim | Value | Source |
 |-------|-------|--------|
-| Total tests | 193 (158 hand-written + 35 AI-generated) | CI + test runs |
+| Total ecosystem tests | 276 (253 platform-core + 23 ClaimsFlow) | CI + test runs |
+| Platform-core tests | 253 (193 v1 legacy + 60 v2 LangGraph) | CI |
 | intelliflow-core tests | 32 | CI |
 | SupportFlow tests | 13 | CI |
 | CareFlow tests | 84 (81 original + 3 integration) | CI |
+| ClaimsFlow tests | 23 | CI |
 | AI-generated tests | 35 (from ai_test_generator.py) | Test run |
 | Enterprise docs | 18 | DOCS_INDEX.md |
-| Verification checks | 137 | verify_enterprise_docs.py |
+| Verification checks | 150 | verify_enterprise_docs.py |
 | Build time (actual) | ~7 hours (~4 SF, ~3 CF) | Kamil's report |
 | Build time (estimated) | 29-48 hours | Architect estimate |
 | SupportFlow policy retrieval | Keyword-based (60+ keywords → 20 policies). NO FAISS, NO embeddings. | Code review |
@@ -50,10 +52,12 @@ These facts are verified. Do NOT contradict them in any output.
 | Strawman hooks ("Stop doing X", "Everyone ships garbage") | "Here's what I built and why" |
 | "2 developer tools" | "3 developer tools (AI test generator, NL log query, scaffold generator)" |
 | "1 developer tool" | "3 developer tools (AI test generator, NL log query, scaffold generator)" |
-| "179 total tests" | "193 total tests (158 hand-written + 35 AI-generated)" |
+| "179 total tests" | "276 total ecosystem tests (253 platform-core + 23 ClaimsFlow)" |
 | "144 hand-written tests" | "158 hand-written tests" |
-| "164 total tests" | "193 total tests (158 hand-written + 35 AI-generated)" |
+| "164 total tests" | "276 total ecosystem tests (253 platform-core + 23 ClaimsFlow)" |
 | "129 hand-written tests" | "158 hand-written tests" |
+| "193 total tests" | "276 total ecosystem tests (253 platform-core + 23 ClaimsFlow)" |
+| "253 total tests" | "276 total ecosystem tests (253 platform-core + 23 ClaimsFlow)" |
 | "intelliflow-core/tools/" | "IntelliFlow_OS/tools/" (actual location of ai_test_generator.py) |
 
 
@@ -120,10 +124,11 @@ Every **built** story must appear substantively in all 8 portfolio_writeup files
 | F | "Tests That Lie" | Unit tests validated components, not integration. Added 3 integration tests mirroring real user entry points. Principle: at least one test per feature must hit the real entry point. | ✅ Built |
 | G | Chaos as Resilience | Both modules: sidebar toggle, failure injection, graceful fallback, audit-logged. Demo-able in 3 minutes. Enterprise buyer question: "what happens when your vector store goes down?" | ✅ Built |
 | H | FHIR Dual-Mode Ingestion | Legacy clinic notes + FHIR R4 Bundles. Adapter pattern: both paths → same extraction output. LOINC 4548-4. CMS mandate context. | ✅ Built |
-| I | Enterprise Evidence Pack | 18 docs (NIST AI RMF, OWASP LLM Top 10, EU AI Act, ethics, observability, security & privacy overview, SLO/SLA statement, release notes & versioning, product roadmap, managed inference ADR, deterministic v1 vs agentic v2 ADR, SR 11-7 model risk management, etc.). 138 automated verification checks. Documentation drift prevention. | ✅ Built |
+| I | Enterprise Evidence Pack | 18 docs (NIST AI RMF, OWASP LLM Top 10, EU AI Act, ethics, observability, security & privacy overview, SLO/SLA statement, release notes & versioning, product roadmap, managed inference ADR, deterministic v1 vs agentic v2 ADR, SR 11-7 model risk management, etc.). 150 automated verification checks. Documentation drift prevention. | ✅ Built |
 | J | AI Test Generator | Reads 3 Pydantic schemas → generates 35 edge-case pytest tests. Schema-aware. "LLM translates, code decides" pattern. Location: IntelliFlow_OS/tools/ai_test_generator.py | ✅ Built |
 | K | NL Log Query | Natural language → SQL WHERE clause. LLM translates, Python validates (column whitelist, blocked keywords, string stripping), code executes against SQLite. 15 tests. Location: IntelliFlow_OS/tools/nl_log_query.py | ✅ Built |
 | L | Scaffold Generator | Developer describes intent → platform-compliant Python boilerplate. Reads schemas, injects governance patterns. ast.parse() validation. 14 tests. Location: IntelliFlow_OS/tools/scaffold_generator.py | ✅ Built |
+| M | ClaimsFlow + SPOG | Agentic insurance claims processing — 4-node LangGraph workflow (intake → fraud_score → kill_switch_guard → adjudication), OFAC/SIU Kill-Switch interceptor, MCP dynamic tool scoping, Executive SPOG dashboard (3-column Streamlit: Governance State, Audit Trail, Cost Ledger). 23 tests. Repo: intelliflow-claimsflow | ✅ Built |
 
 ---
 
@@ -135,6 +140,7 @@ Every **built** story must appear substantively in all 8 portfolio_writeup files
 | intelliflow-core | Shared SDK | https://github.com/kmufti7/intelliflow-core |
 | intelliflow-supportflow | Banking module | https://github.com/kmufti7/intelliflow-supportflow |
 | intelliflow-careflow | Healthcare module | https://github.com/kmufti7/intelliflow-careflow |
+| intelliflow-claimsflow | Insurance module | https://github.com/kmufti7/intelliflow-claimsflow |
 
 ---
 

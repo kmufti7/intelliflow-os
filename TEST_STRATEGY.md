@@ -30,7 +30,8 @@
 | NL Log Query (nl_log_query.py) | 15 | Injection attacks (6 patterns), column whitelist, end-to-end query, cost tracking, self-logging |
 | Scaffold Generator (scaffold_generator.py) | 14 | ast.parse() validation, markdown fence stripping, retry logic, cost tracking, end-to-end generation |
 | intelliflow-core v2 (LangGraph runtime) | 23 | Workflow wrapper (15): state validation, interceptor slots, run/compile lifecycle. Kill-switch guard (8): pass, single failure, multi-failure, workflow integration, zero rules, state snapshot, fail-closed (ZeroDivisionError), immutability |
-| **Total** | **253** | **193 v1 legacy (158 hand-written + 35 AI-generated) + 60 v2 LangGraph** |
+| ClaimsFlow (intelliflow-claimsflow) | 23 | Schema validation, fraud score (threshold + boundary), e2e workflow (clean + fraud), WORM audit trail, FinOps ledger, MCP tool scoping, Kill-Switch intercept |
+| **Total** | **276** | **253 platform-core + 23 ClaimsFlow (federated ecosystem tracking)** |
 
 ## CI/CD
 

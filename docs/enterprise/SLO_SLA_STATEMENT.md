@@ -112,9 +112,9 @@ All platform demonstrations and test suites use synthetic patient data. No produ
 
 | Method | Scope | Frequency |
 |--------|-------|-----------|
-| **Automated test suite** | 193 tests (158 hand-written + 35 AI-generated) covering extraction, reasoning, routing, chaos, PHI safety, FHIR, schema validation | Every commit via GitHub Actions CI |
+| **Automated test suite** | 276 ecosystem tests (253 platform-core + 23 ClaimsFlow) covering extraction, reasoning, routing, chaos, PHI safety, FHIR, schema validation, fraud score, Kill-Switch intercept | Every commit via GitHub Actions CI |
 | **Chaos mode testing** | Failure injection for FAISS, Pinecone, and database components with graceful fallback verification | On-demand via Streamlit UI toggle; validated in test suite |
-| **Enterprise docs verification** | 138 automated checks across 18 enterprise documents for consistency, accuracy, and completeness | On-demand via `verify_enterprise_docs.py`; 15-check cascade verification via `verify_cascade.py` |
+| **Enterprise docs verification** | 150 automated checks across 18 enterprise documents for consistency, accuracy, and completeness | On-demand via `verify_enterprise_docs.py`; 15-check cascade verification via `verify_cascade.py` |
 | **Cost tracking** | Per-interaction token usage and cost attribution logged via Pydantic schemas | Every LLM call; aggregated in audit logs |
 
 ### What the Platform Does Not Measure

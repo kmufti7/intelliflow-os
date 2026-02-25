@@ -71,6 +71,15 @@ Cost is logged per LLM invocation, not per workflow completion. If a workflow ex
 3 of 4 planned LLM calls before a kill-switch fires or a crash occurs, all 3 costs are
 captured. The enterprise still paid for those tokens.
 
+**Kill-Switch partial execution (ClaimsFlow):**
+When KillSwitchGuard fires in the ClaimsFlow workflow (e.g., OFAC/SIU sanctions check),
+the adjudication node never executes. The Token Ledger captures exactly 2 cost receipts
+(intake + fraud_score) instead of 3. This is not a bug — it is observable proof that
+governance halted execution before the decision node. The SPOG dashboard renders this
+visually: the Cost Ledger column shows 2 entries for a halted workflow vs. 3 for a
+clean workflow, providing executive-level confirmation that the Kill-Switch operated
+correctly.
+
 **PTU capacity forecasting:**
 Persistent per-module cost aggregation enables the token consumption baselines required
 for Provisioned Throughput Unit (PTU) capacity planning. PTU commitments require
