@@ -61,10 +61,11 @@ STORY_TERMS = {
     "F": ["tests that lie", "integration test", "12.*unit", "3 integration", "real entry point"],
     "G": ["chaos mode", "resilience", "failure injection", "graceful", "audit"],
     "H": ["FHIR", "dual-mode", "LOINC", "4548-4", "adapter pattern", "Bundle"],
-    "I": ["enterprise", "18 docs", "\\d+.*checks", "NIST", "OWASP", "verify_enterprise"],
+    "I": ["enterprise", "27 docs", "\\d+.*checks", "NIST", "OWASP", "verify_enterprise"],
     "J": ["AI test generator", "schema-aware", "35.*generated", "Pydantic.*test", "edge-case"],
     "K": ["NL log query", "natural language.*log", "SQL WHERE"],
     "L": ["scaffold generator", "boilerplate", "ast.parse"],
+    "M": ["claimsflow", "LangGraph", "OFAC", "fraud"],
 }
 
 FORBIDDEN_PHRASES = [
@@ -355,6 +356,7 @@ def check_readme_story_coverage(built_stories):
         "J": ["ai test generator"],
         "K": ["nl log query"],
         "L": ["scaffold generator"],
+        "M": ["claimsflow"],
     }
 
     missing = []

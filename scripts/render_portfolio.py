@@ -137,8 +137,8 @@ TEMPLATIZE_RULES = [
     (r"\b3 schemas\b", "{{pydantic_schemas}} schemas", True),
 
     # Repos
-    (r"\b4 repositories\b", "{{repos}} repositories", True),
-    (r"\b4 repos\b", "{{repos}} repos", True),
+    (r"\b4 repositories\b", "{{total_repos}} repositories", True),
+    (r"\b4 repos\b", "{{total_repos}} repos", True),
 
     # Build time
     ("~7 hours of actual build time (estimated 29-48 hours traditional)",
@@ -159,7 +159,7 @@ TEMPLATIZE_RULES = [
     # --- Table-format values (pipe-delimited rows) ---
     # These must come AFTER prose rules to avoid double-replacement.
     # 01_executive_summary Key Metrics table
-    ("| Repositories | 4 |", "| Repositories | {{repos}} |", False),
+    ("| Repositories | 4 |", "| Repositories | {{total_repos}} |", False),
     ("| Banking policies | 20 |", "| Banking policies | {{sf_policies}} |", False),
     ("| Clinical guidelines | 10 |", "| Clinical guidelines | {{cf_guidelines}} |", False),
     ("| Sample patients | 5 |", "| Sample patients | {{cf_test_patients}} |", False),
@@ -175,7 +175,7 @@ TEMPLATIZE_RULES = [
     ("| Sample patients | 5 |", "| Sample patients | {{cf_test_patients}} |", False),
     ("| Chaos tests | 28 (13 + 15) |", "| Chaos tests | {{chaos_tests_total}} (13 + 15) |", False),
     ("| Enterprise docs | 11 |", "| Enterprise docs | {{enterprise_docs}} |", False),
-    ("| Repositories | 4 |", "| Repositories | {{repos}} |", False),
+    ("| Repositories | 4 |", "| Repositories | {{total_repos}} |", False),
 
     # Prose values that need more context
     ("All 35 tests pass", "All {{ai_generated_tests}} tests pass", False),

@@ -1,5 +1,26 @@
 # CLAUDE.md — IntelliFlow OS Platform Overview
 
+## Platform Maturity Milestone — 2026-02-25
+
+IntelliFlow OS has reached production-ready state.
+Primary focus shifts to Go-to-Market and Phase 3 roadmap execution.
+
+Final state at milestone:
+- 276 ecosystem tests (253 platform-core + 23 claimsflow-lob)
+- 27 enterprise documents (19 original + 8 PRDs)
+- 153/153 automated verification checks
+- 14/14 cascade consistency checks
+- 5 repos (4 active code repos + intelliflow-os platform overview)
+- 3 LOB modules: SupportFlow, CareFlow, ClaimsFlow
+- Phase 3 roadmap published: HITL Maker-Checker, Continuous Evals, Edge SLM
+- Codex external audit: clean
+
+Engineering changes are permitted for deliberate Phase 3 investments.
+Default posture: documentation, positioning, and go-to-market.
+Monthly heartbeat cadence: ~50-line engineering spikes per Phase 3 track.
+
+---
+
 ## What This Repo Is
 
 Platform overview and recruiter front door for IntelliFlow OS, a governance-first AI platform for regulated industries (banking, healthcare). Contains enterprise documentation, portfolio write-ups, strategy documents, and verification scripts.
@@ -21,8 +42,8 @@ These facts are verified. Do NOT contradict them in any output.
 | CareFlow tests | 84 (81 original + 3 integration) | CI |
 | ClaimsFlow tests | 23 | CI |
 | AI-generated tests | 35 (from ai_test_generator.py) | Test run |
-| Enterprise docs | 18 | DOCS_INDEX.md |
-| Verification checks | 150 | verify_enterprise_docs.py |
+| Enterprise docs | 27 | DOCS_INDEX.md (19 original + 8 PRDs) |
+| Verification checks | 153 | verify_enterprise_docs.py |
 | Build time (actual) | ~7 hours (~4 SF, ~3 CF) | Kamil's report |
 | Build time (estimated) | 29-48 hours | Architect estimate |
 | SupportFlow policy retrieval | Keyword-based (60+ keywords → 20 policies). NO FAISS, NO embeddings. | Code review |
@@ -119,12 +140,12 @@ Every **built** story must appear substantively in all 8 portfolio_writeup files
 | A | Deterministic Reasoning | "LLM extracts, code decides, LLM explains." A1C 8.2 > 7.0 = True. Python, not LLM. 3 gap types with severity tiers. | ✅ Built |
 | B | PHI-Aware Data Residency | Patient data → local FAISS. Guidelines → Pinecone cloud. Concept Query Builder strips identifiers. Two modes: local/enterprise. | ✅ Built |
 | C | Platform Architecture | intelliflow-core: pip-installable SDK. 3 Pydantic contracts. Both modules import, not copy-paste. | ✅ Built |
-| D | Cost Optimization (5 Layers) | Regex-first (100%), structured outputs (enums), gpt-4o-mini (10x cheaper), local FAISS (zero cloud cost for PHI), token tracking. | ✅ Built |
+| D | Cost Optimization (5 Layers) | Regex-first (100%), structured outputs (enums), gpt-4o-mini (directionally ~10x cheaper, scenario-dependent, per Feb 2026 pricing), local FAISS (zero cloud cost for PHI), token tracking. | ✅ Built |
 | E | Chaos Mode Bug Fix | 12/12 tests passing, feature broken. Front-door bypass (dropdown skipped orchestrator). Silent catch (except Exception swallowed ChaosError). Fix: single entry point + explicit ChaosError catch. | ✅ Built |
 | F | "Tests That Lie" | Unit tests validated components, not integration. Added 3 integration tests mirroring real user entry points. Principle: at least one test per feature must hit the real entry point. | ✅ Built |
 | G | Chaos as Resilience | Both modules: sidebar toggle, failure injection, graceful fallback, audit-logged. Demo-able in 3 minutes. Enterprise buyer question: "what happens when your vector store goes down?" | ✅ Built |
 | H | FHIR Dual-Mode Ingestion | Legacy clinic notes + FHIR R4 Bundles. Adapter pattern: both paths → same extraction output. LOINC 4548-4. CMS mandate context. | ✅ Built |
-| I | Enterprise Evidence Pack | 18 docs (NIST AI RMF, OWASP LLM Top 10, EU AI Act, ethics, observability, security & privacy overview, SLO/SLA statement, release notes & versioning, product roadmap, managed inference ADR, deterministic v1 vs agentic v2 ADR, SR 11-7 model risk management, etc.). 150 automated verification checks. Documentation drift prevention. | ✅ Built |
+| I | Enterprise Evidence Pack | 27 docs (19 original + 8 PRDs: NIST AI RMF, OWASP LLM Top 10, EU AI Act, ethics, observability, security & privacy overview, SLO/SLA statement, release notes & versioning, product roadmap, managed inference ADR, deterministic v1 vs agentic v2 ADR, SR 11-7 model risk management, data lifecycle management ADR, 5 retrospective PRDs, 3 forward-looking PRDs). 153 automated verification checks. Documentation drift prevention. | ✅ Built |
 | J | AI Test Generator | Reads 3 Pydantic schemas → generates 35 edge-case pytest tests. Schema-aware. "LLM translates, code decides" pattern. Location: IntelliFlow_OS/tools/ai_test_generator.py | ✅ Built |
 | K | NL Log Query | Natural language → SQL WHERE clause. LLM translates, Python validates (column whitelist, blocked keywords, string stripping), code executes against SQLite. 15 tests. Location: IntelliFlow_OS/tools/nl_log_query.py | ✅ Built |
 | L | Scaffold Generator | Developer describes intent → platform-compliant Python boilerplate. Reads schemas, injects governance patterns. ast.parse() validation. 14 tests. Location: IntelliFlow_OS/tools/scaffold_generator.py | ✅ Built |

@@ -76,7 +76,7 @@ IntelliFlow OS provides the governance architecture. Production deployment requi
 | Deterministic reasoning gates | ✅ Code-based decisions, no LLM gap detection | |
 | Cost tracking and controls | ✅ 5-layer optimization, per-interaction tracking | |
 | Chaos engineering / resilience testing | ✅ Failure injection, graceful fallback, audit-logged | |
-| BAA execution with Azure | | ✅ Customer executes with Microsoft |
+| Compliance agreements (e.g., BAA) | | ✅ Customer executes directly with cloud provider |
 | SOC 2 certification | | ✅ Platform provides audit evidence structure |
 | Penetration testing | | ✅ Platform follows OWASP LLM Top 10 patterns |
 | Network security (VPC, private endpoints) | | ✅ Platform supports VPC deployment |
@@ -87,7 +87,7 @@ IntelliFlow OS provides the governance architecture. Production deployment requi
 
 ## Azure OpenAI Service Deployment
 
-While foundational model providers (including direct OpenAI Enterprise) now offer BAA eligibility, Zero Data Retention (ZDR), and PrivateLink configurations, satisfying baseline compliance is only the first step in enterprise AI deployment.
+While foundational model providers (including direct OpenAI Enterprise) now satisfy baseline compliance requirements (Zero Data Retention, PrivateLink configurations), baseline compliance is only the first step in enterprise AI deployment.
 
 IntelliFlow OS explicitly standardizes on Azure OpenAI Service to ensure deployments remain entirely within the organization's existing sovereign cloud perimeter. By leveraging Azure, IntelliFlow OS natively inherits the enterprise's pre-approved Virtual Networks (VNets), Microsoft Entra ID Role-Based Access Control (RBAC), Azure Key Vault Customer-Managed Keys (CMK), and existing Microsoft cloud billing commitments (MACC).
 
@@ -107,7 +107,7 @@ Transparency about limitations is part of the governance posture:
 
 - **Not SOC 2 certified.** The platform provides structured audit logging, event schemas, and queryable governance trails that map to SOC 2 evidence requirements — but certification is a customer responsibility.
 - **Not independently penetration tested.** The platform follows OWASP LLM Top 10 patterns and provides defense-in-depth controls — but formal pen testing is a customer responsibility.
-- **Not a BAA counterparty.** The operator executes BAAs directly with Azure/Microsoft. IntelliFlow OS is a software platform, not a covered entity or business associate.
+- **Not a compliance counterparty.** The operator executes compliance agreements (e.g., BAA) directly with their cloud provider. IntelliFlow OS is a software platform, not a covered entity or business associate.
 - **HIPAA-aligned means design patterns — not legal compliance certification.** The architecture demonstrates how to handle PHI responsibly. Legal compliance depends on the operator's full deployment environment, policies, and certifications.
 - **No production PHI in reference implementation environments.** All demonstrations use synthetic patient data. Real PHI requires customer-provisioned infrastructure with appropriate safeguards.
 

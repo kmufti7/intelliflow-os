@@ -78,7 +78,7 @@ IntelliFlow OS provides the governance architecture. The operator is responsible
 | Deterministic reasoning gates | ✅ Code-based decisions, no LLM gap detection | Validation of clinical accuracy for their population |
 | Cost tracking and controls | ✅ 5-layer optimization, per-interaction tracking | Azure spend limits, budget alerts |
 | Chaos engineering / resilience testing | ✅ Failure injection, graceful fallback, audit-logged | Production load testing, capacity planning |
-| BAA execution with Azure | — | ✅ Customer executes BAA with Microsoft directly |
+| Compliance agreements (e.g., BAA) | — | ✅ Customer executes directly with cloud provider |
 | SOC 2 certification | Platform provides structured audit evidence | ✅ Customer pursues certification with auditor |
 | Penetration testing | Platform follows OWASP LLM Top 10 patterns | ✅ Customer engages qualified pen testing firm |
 | Network security (VPC, private endpoints) | Platform supports VPC deployment patterns | ✅ Customer configures network isolation |
@@ -97,7 +97,7 @@ IntelliFlow OS provides the governance architecture. The operator is responsible
 - **Third-party service outages.** Azure OpenAI Service and Pinecone availability are governed by their respective SLAs. IntelliFlow OS validates graceful degradation through chaos engineering but cannot guarantee third-party uptime.
 - **Infrastructure failures.** Host machine failures, disk corruption, network partitions, and power loss are outside platform scope. The platform assumes the operator provisions reliable infrastructure.
 - **Data accuracy.** The platform enforces schema validation and deterministic reasoning. It does not guarantee the clinical accuracy of medical guidelines, policy documents, or other reference data loaded by the operator.
-- **Regulatory compliance.** HIPAA-aligned design patterns are architectural demonstrations. Legal compliance is determined by the operator's full deployment environment, policies, certifications, and BAA coverage.
+- **Regulatory compliance.** HIPAA-aligned design patterns are architectural demonstrations. Legal compliance is determined by the operator's full deployment environment, policies, certifications, and compliance coverage.
 - **Scale beyond reference deployment.** Performance targets are validated on single-node deployments. Multi-node, high-concurrency, or multi-tenant deployments require operator-led capacity planning and benchmarking.
 
 ### Synthetic Data Only
@@ -114,7 +114,7 @@ All platform demonstrations and test suites use synthetic patient data. No produ
 |--------|-------|-----------|
 | **Automated test suite** | 276 ecosystem tests (253 platform-core + 23 ClaimsFlow) covering extraction, reasoning, routing, chaos, PHI safety, FHIR, schema validation, fraud score, Kill-Switch intercept | Every commit via GitHub Actions CI |
 | **Chaos mode testing** | Failure injection for FAISS, Pinecone, and database components with graceful fallback verification | On-demand via Streamlit UI toggle; validated in test suite |
-| **Enterprise docs verification** | 150 automated checks across 18 enterprise documents for consistency, accuracy, and completeness | On-demand via `verify_enterprise_docs.py`; 15-check cascade verification via `verify_cascade.py` |
+| **Enterprise docs verification** | 153 automated checks across 27 enterprise documents for consistency, accuracy, and completeness | On-demand via `verify_enterprise_docs.py`; 14-check cascade verification via `verify_cascade.py` |
 | **Cost tracking** | Per-interaction token usage and cost attribution logged via Pydantic schemas | Every LLM call; aggregated in audit logs |
 
 ### What the Platform Does Not Measure

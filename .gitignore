@@ -1,2 +1,24 @@
 # Personal files
 portfolio_writeup/
+
+# Local IDE / Claude settings
+.claude/settings.local.json
+
+# Template scratch
+claude-md-template/
+
+# Data and databases
+data/
+*.db
+*.db-journal
+
+# Test artifacts
+hello.py
+nul
+pytest.ini
+
+# Python bytecode
+__pycache__/
+tests/__pycache__/
+tools/__pycache__/
+*.pyc

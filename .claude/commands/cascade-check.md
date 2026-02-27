@@ -39,14 +39,14 @@ If the change affects architecture, data flow, or module structure:
 
 ## Step 6: Check Cross-Repo Consistency
 If the change affects:
-- LICENSE → verify all 4 repos have matching LICENSE
-- README patterns → verify all 4 repo READMEs are consistent
+- LICENSE → verify all 5 repos (4 active code repos + intelliflow-os platform overview) have matching LICENSE
+- README patterns → verify all 5 repo READMEs are consistent
 - SDK contracts → verify module repos reference correct version
 
 ## Step 7: Report
 Output:
-- verify_cascade.py result (X/15)
-- verify_enterprise_docs.py result (X/137)
+- verify_cascade.py result (X/14)
+- verify_enterprise_docs.py result (X/153)
 - Portfolio files needing update (list with reasons)
 - Diagrams needing update (list with reasons)
 - Cross-repo issues (list)

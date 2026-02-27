@@ -171,7 +171,7 @@ flowchart LR
 
   subgraph AI Test Generator
     SC -->|FieldInfo introspection| TG[LLM generates<br/>pytest suites]
-    TG --> PY[pytest validates<br/>35 generated · 193 total]
+    TG --> PY[pytest validates<br/>35 generated · 253 total]
   end
 
   subgraph NL Log Query
@@ -231,10 +231,10 @@ DatabaseSessionManager provides a shared SQLite connection with WAL journaling. 
 
 ### Token FinOps Tracker (v2)
 
-TokenLedgerRepository provides append-only financial telemetry for LLM token consumption. It shares DatabaseSessionManager with WORMLogRepository for unified SQLite storage. Cost is calculated at write time using static Azure OpenAI pricing (immutable receipt pattern — stored cost_usd is never recalculated). The token_ledger table is append-only financial telemetry. In production deployments, a Data Lifecycle Management (DLM) policy (e.g., 90-day archival to cold storage) is required to prevent unbounded disk growth. 13 tests in `test_token_ledger.py`.
+TokenLedgerRepository provides append-only financial telemetry for LLM token consumption. It shares DatabaseSessionManager with WORMLogRepository for unified SQLite storage. Cost is calculated at write time using static Azure OpenAI pricing (immutable receipt pattern — stored cost_usd is never recalculated). The token_ledger table is append-only financial telemetry. In production deployments, a Data Lifecycle Management (DLM) policy (e.g., 90-day archival to cold storage) is required to prevent unbounded disk growth. See [ADR: Data Lifecycle Management](docs/enterprise/ADR_DATA_LIFECYCLE_MANAGEMENT.md) for the architecture decision rationale and deployer responsibility model. 13 tests in `test_token_ledger.py`.
 
 ## Notes
 - Enterprise integration middleware optimized for auditability and regulatory compliance.
 - Deterministic logic is used where correctness matters.
 - LLM translates and formats; code decides.
-- Designed for Azure OpenAI Service (BAA-eligible) to meet enterprise compliance requirements for regulated industries.
+- Designed for deployment within existing sovereign Azure/AWS perimeters — inherits enterprise identity, encryption, and network controls.

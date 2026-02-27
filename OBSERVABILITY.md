@@ -85,7 +85,7 @@ Every `get_tools()` call on MCPRegistry is an observable event — it records wh
 
 The static catalog design means the full tool inventory is deterministic from the codebase — auditors can verify the master list without runtime logs. Dynamic scoping events provide the per-execution evidence of which subset was active for each node.
 
-WORM logging is active for all v2 workflow executions. Both kill-switch intercepts and standard workflow completions produce immutable audit records. Entries include trace ID, event type, payload hash, and HMAC chain link — satisfying SR 11-7 audit trail requirements and SEC 17a-4 non-rewritable record patterns.
+WORM logging is active for all v2 workflow executions. Both kill-switch intercepts and standard workflow completions produce immutable audit records. Entries include trace ID, event type, payload hash, and HMAC chain link — consistent with SR 11-7 audit trail expectations and SEC 17a-4 non-rewritable record patterns.
 
 ### WORM Audit Events (v2)
 

@@ -21,10 +21,11 @@ metrics:
   chaos_tests_total: 28
 
   # Enterprise docs
-  enterprise_docs: 18
-  verification_checks: 150
+  # 19 original docs + 8 PRDs (5 retrospective Launched + 3 forward-looking Planned)
+  enterprise_docs: 27
+  verification_checks: 153
   total_tests: 276
-  cascade_checks: 15
+  cascade_checks: 14
 
   # Build metrics
   build_time_actual: "~7 hours"
@@ -58,7 +59,8 @@ metrics:
 
   # Platform
   modules: 3
-  repos: 4
+  code_repos: 4     # intelliflow-core, supportflow, careflow, claimsflow
+  total_repos: 5    # + intelliflow-os (platform overview repo)
 
 completed_v2_steps:
   - name: "LangGraphWorkflow"

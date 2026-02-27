@@ -11,7 +11,7 @@
 IntelliFlow OS targets regulated industries — healthcare, banking, insurance — where LLM inference carries compliance, data sovereignty, and operational risk implications that general-purpose AI platforms can ignore. The inference layer is a foundational architectural decision because it determines:
 
 - **Data residency guarantees.** Where patient data, financial records, and policy documents are processed during inference.
-- **Compliance posture.** Whether the platform can operate under BAA, HIPAA-aligned, and SOC 2-audited infrastructure without the operator building that posture from scratch.
+- **Compliance posture.** Whether the platform deploys within an already-sovereign cloud perimeter (Entra ID, Key Vault, VNet, MACC) without the operator onboarding a net-new sub-processor.
 - **Operational burden.** Who manages GPU provisioning, model serving, autoscaling, and inference reliability — the platform team or a cloud provider with enterprise SLAs.
 - **FinOps predictability.** Whether inference costs are forecastable for enterprise procurement or variable based on GPU utilization and spot pricing.
 
@@ -29,7 +29,7 @@ IntelliFlow OS uses **managed inference via Azure OpenAI Service** as the primar
 
 ### Option A: Azure OpenAI Service via Private Endpoint (Selected — Primary)
 
-While foundational model providers (including direct OpenAI Enterprise) now offer BAA eligibility, Zero Data Retention (ZDR), and PrivateLink configurations, satisfying baseline compliance is only the first step in enterprise AI deployment.
+While foundational model providers (including direct OpenAI Enterprise) now satisfy baseline compliance requirements (Zero Data Retention, PrivateLink configurations), baseline compliance is only the first step in enterprise AI deployment.
 
 IntelliFlow OS explicitly standardizes on Azure OpenAI Service to ensure deployments remain entirely within the organization's existing sovereign cloud perimeter. By leveraging Azure, IntelliFlow OS natively inherits the enterprise's pre-approved Virtual Networks (VNets), Microsoft Entra ID Role-Based Access Control (RBAC), Azure Key Vault Customer-Managed Keys (CMK), and existing Microsoft cloud billing commitments (MACC).
 
@@ -38,7 +38,7 @@ This architectural standard eliminates the immense InfoSec, Legal, and Procureme
 | Attribute | Detail |
 |-----------|--------|
 | **Data processing** | Within Azure region, operator's tenant. Microsoft does not use customer data for model training under enterprise agreement. |
-| **Compliance coverage** | BAA-eligible, SOC 2 Type II, ISO 27001, HITRUST CSF. HIPAA-aligned when operator executes BAA with Microsoft. |
+| **Compliance coverage** | Inherits enterprise sovereign perimeter (Entra ID, Key Vault, VNet). SOC 2 Type II, ISO 27001, HITRUST CSF. Operator executes compliance agreements with Microsoft. |
 | **Network isolation** | Private endpoint binds to operator's VNet. DNS resolution routes to private IP. No public internet exposure. |
 | **Model access** | GPT-4o, GPT-4o-mini, text-embedding-3-small, and future models as Microsoft releases them. |
 | **Operational burden** | Zero GPU operations. Microsoft manages provisioning, scaling, patching, and availability. |
@@ -51,7 +51,7 @@ AWS Bedrock provides managed access to Anthropic Claude, Amazon Titan, and other
 | Attribute | Detail |
 |-----------|--------|
 | **Data processing** | Within AWS region, operator's account. AWS does not use customer data for model training. |
-| **Compliance coverage** | HIPAA-eligible (with BAA), SOC 2 Type II, ISO 27001, FedRAMP High (GovCloud). |
+| **Compliance coverage** | HIPAA-eligible, SOC 2 Type II, ISO 27001, FedRAMP High (GovCloud). Operator executes compliance agreements with AWS. |
 | **Network isolation** | PrivateLink creates VPC endpoint. Traffic stays within AWS backbone. |
 | **Model access** | Claude (Anthropic), Titan (Amazon), Llama (Meta), Mistral, and others as AWS onboards them. |
 | **Operational burden** | Zero GPU operations. AWS manages provisioning, scaling, and availability. |
@@ -70,6 +70,8 @@ vLLM is an open-source inference engine optimized for high-throughput LLM servin
 | **KV cache control** | PagedAttention with configurable block size. Operator manages GPU memory allocation. |
 | **Operational burden** | GPU procurement, driver management, CUDA versioning, model weight distribution, health monitoring, autoscaling, failover. |
 | **Capital cost** | $30K–$40K per H100 GPU. Minimum viable cluster: 4–8 GPUs ($120K–$320K hardware). Full production: $500K–$2M+. |
+
+*Hardware and GPU pricing estimates as of Feb 2026.*
 
 ### Option D: Self-Hosted Triton Inference Server (Rejected)
 
@@ -91,8 +93,8 @@ NVIDIA Triton Inference Server supports multi-model serving with model paralleli
 | Dimension | Azure OpenAI (Private Endpoint) | AWS Bedrock (PrivateLink) | Self-Hosted vLLM | Self-Hosted Triton |
 |-----------|--------------------------------|--------------------------|-------------------|-------------------|
 | **Data sovereignty** | Azure region, operator tenant. Microsoft enterprise data use terms. | AWS region, operator account. AWS data use terms. | Full on-premises control. | Full on-premises control. |
-| **Compliance posture** | BAA-eligible, SOC 2 Type II, HITRUST CSF inherited. | HIPAA-eligible, SOC 2 Type II, FedRAMP High (GovCloud). | None inherited. Full build required. | None inherited. Full build required. |
-| **FinOps model** | PTUs for predictable costs; token-based for variable workloads. | Provisioned Throughput or on-demand token pricing. | CapEx-heavy ($500K–$2M+ GPU). Variable OpEx (power, cooling, ops team). | Same as vLLM plus Triton ops overhead. |
+| **Compliance posture** | Sovereign perimeter inherited (Entra ID, Key Vault, VNet). SOC 2 Type II, HITRUST CSF. | SOC 2 Type II, FedRAMP High (GovCloud). | None inherited. Full build required. | None inherited. Full build required. |
+| **FinOps model** | PTUs for predictable costs; token-based for variable workloads. | Provisioned Throughput or on-demand token pricing. | CapEx-heavy ($500K–$2M+ GPU, as of Feb 2026). Variable OpEx (power, cooling, ops team). | Same as vLLM plus Triton ops overhead. |
 | **Operational burden** | None. Microsoft SLA (99.9%+ for PTUs). | None. AWS SLA. | High. GPU ops team required (2–3 FTEs minimum). | Very high. GPU ops + Triton expertise required. |
 | **Quantization control** | None. Microsoft manages model optimization. | None. AWS/model provider manages optimization. | Full. FP8, INT4, AWQ, GPTQ configurable per model. | Full. TensorRT-LLM compilation with custom precision. |
 | **KV cache control** | None. Abstracted by provider. | None. Abstracted by provider. | Full. PagedAttention block size, GPU memory allocation. | Full. Plus multi-model memory partitioning. |
@@ -105,9 +107,9 @@ NVIDIA Triton Inference Server supports multi-model serving with model paralleli
 
 Self-hosted inference (Options C and D) was rejected for four specific reasons, each independently sufficient:
 
-### 1. Data Sovereignty Risk Without BAA
+### 1. Data Sovereignty Risk Without Sovereign Perimeter
 
-Self-hosting provides physical data control but does not provide compliance coverage. The operator must independently achieve SOC 2 Type II certification, execute their own BAA framework, conduct penetration testing, and maintain audit trails for inference operations. Azure OpenAI Service and AWS Bedrock provide these through their existing enterprise compliance programs — the operator inherits the posture rather than building it.
+Self-hosting provides physical data control but does not provide compliance coverage. The operator must independently achieve SOC 2 Type II certification, build their own compliance framework, conduct penetration testing, and maintain audit trails for inference operations. Azure OpenAI Service and AWS Bedrock provide these through their existing enterprise compliance programs — the operator inherits the posture rather than building it.
 
 For regulated industries, the question is not "where is the data?" but "can you prove the data handling meets compliance requirements?" Managed providers answer this with existing certifications. Self-hosted requires the operator to build and maintain the evidence independently.
 
@@ -126,6 +128,8 @@ A production-grade self-hosted inference deployment for regulated industries req
 | **Total (Year 1)** | | **$360K–$910K** |
 | **3-year TCO** | Including refresh, power, and ops team | **$1.5M–$3M+** |
 
+*All hardware, staffing, and infrastructure cost estimates as of Feb 2026.*
+
 This capital expenditure is not justified when managed inference provides equivalent or better compliance posture at token-based or PTU pricing that scales with actual usage.
 
 ### 3. Inference Operations Team Required
@@ -137,13 +141,13 @@ Self-hosted inference requires dedicated operations expertise:
 - **Reliability:** Health checks, autoscaling, failover, load balancing across GPU nodes.
 - **Security:** Network isolation, access control, encryption, audit logging at the inference layer.
 
-Minimum staffing: 2–3 dedicated ML infrastructure engineers. Annual cost: $400K–$750K fully loaded. This team does not exist in most regulated industry IT organizations, and hiring for GPU operations expertise is competitive.
+Minimum staffing: 2–3 dedicated ML infrastructure engineers. Annual cost: $400K–$750K fully loaded (as of Feb 2026). This team does not exist in most regulated industry IT organizations, and hiring for GPU operations expertise is competitive.
 
 ### 4. No Incremental Compliance Benefit
 
 The compliance frameworks relevant to IntelliFlow OS (HIPAA, NIST AI RMF, OWASP LLM Top 10, EU AI Act) do not require self-hosted inference. They require:
 
-- Data processing agreements (BAAs) — available from Azure and AWS.
+- Data processing agreements — available from Azure and AWS.
 - Audit trails for model inputs/outputs — implemented at the application layer regardless of inference provider.
 - Network isolation — achieved through private endpoints and PrivateLink.
 - Data residency within specified jurisdictions — configurable by Azure region and AWS region selection.
@@ -160,6 +164,8 @@ Self-hosting adds operational complexity without improving the compliance postur
 |-------|---------------------------|-----------------------------------|-----------------|
 | GPT-4o | ~$3,600/PTU/month | $2.50 input / $10.00 output | ~1.4M output tokens/month per PTU |
 | GPT-4o-mini | ~$900/PTU/month | $0.15 input / $0.60 output | ~1.5M output tokens/month per PTU |
+
+*All token and PTU pricing figures as of Feb 2026. Verify current rates with provider before capacity planning.*
 
 **IntelliFlow OS cost posture:**
 
@@ -186,7 +192,7 @@ Managed inference pricing maps naturally to enterprise procurement:
 - **Middleware connectors target private endpoints only.** All inference integration code assumes Azure Private Endpoint or AWS PrivateLink. No public internet API calls in the inference path.
 - **Quantization decisions delegated to provider.** Microsoft and AWS optimize model serving for their hardware. The platform does not need to manage FP8/INT4 tradeoffs, KV cache block sizing, or continuous batching configuration.
 - **Operational burden eliminated.** Zero GPU procurement, zero driver management, zero inference scaling operations. The platform team focuses on application-layer governance, not infrastructure operations.
-- **Compliance posture strengthened.** BAA eligibility, SOC 2 Type II, and HITRUST CSF coverage inherited from cloud provider certifications. The operator's compliance evidence includes provider audit reports rather than self-assessed infrastructure documentation.
+- **Compliance posture strengthened.** SOC 2 Type II and HITRUST CSF coverage inherited from cloud provider certifications. The operator's compliance evidence includes provider audit reports rather than self-assessed infrastructure documentation.
 - **Time to production measured in days, not months.** Private endpoint provisioning and API integration is a days-scale operation. Self-hosted GPU cluster build-out is a months-scale operation.
 
 ### Negative
@@ -202,10 +208,10 @@ Managed inference pricing maps naturally to enterprise procurement:
 
 | Reference | Relevance |
 |-----------|-----------|
-| [Azure OpenAI Service BAA](https://learn.microsoft.com/en-us/azure/compliance/offerings/offering-hipaa-us) | BAA eligibility for HIPAA-aligned deployments. Azure OpenAI is a covered service under Microsoft's BAA. |
+| [Azure OpenAI Compliance](https://learn.microsoft.com/en-us/azure/compliance/offerings/offering-hipaa-us) | HIPAA-aligned deployment support. Azure OpenAI is a covered service under Microsoft's compliance agreements. |
 | [Azure OpenAI Private Endpoints](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/private-endpoints) | Network isolation configuration for VNet-integrated inference. |
 | [Azure OpenAI Provisioned Throughput](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/provisioned-throughput) | PTU pricing model and capacity planning for reserved inference. |
-| [AWS Bedrock HIPAA Eligibility](https://aws.amazon.com/bedrock/security-compliance/) | HIPAA-eligible service under AWS BAA. PrivateLink for VPC isolation. |
+| [AWS Bedrock HIPAA Eligibility](https://aws.amazon.com/bedrock/security-compliance/) | HIPAA-eligible service. PrivateLink for VPC isolation. |
 | [SR 11-7: Guidance on Model Risk Management](https://www.federalreserve.gov/supervisionreg/srletters/sr1107.htm) | Federal Reserve guidance on model risk. Relevant to banking module inference decisions. |
 | [NIST AI RMF](https://www.nist.gov/artificial-intelligence/risk-management-framework) | Risk management framework mapped in GOVERNANCE.md. Inference provider selection is a Govern function decision. |
 | [vLLM Project](https://github.com/vllm-project/vllm) | Open-source inference engine evaluated as Option C. |

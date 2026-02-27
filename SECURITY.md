@@ -3,7 +3,7 @@
 This is a portfolio reference implementation. It demonstrates security and governance patterns for LLM systems.
 It is not a production-hardened system and is not marketed as certified compliant.
 
-Designed for Azure OpenAI Service (BAA-eligible) to meet enterprise compliance requirements for regulated industries.
+Designed for deployment within existing sovereign Azure/AWS perimeters — inherits enterprise identity, encryption, and network controls.
 
 ## Threat Model (Lightweight)
 
@@ -54,7 +54,7 @@ IntelliFlow OS provides governance-ready patterns. Production deployment require
 
 - **SOC 2 Certification:** Customer responsibility. The platform provides structured audit logging, event schemas, and queryable governance trails that map directly to SOC 2 evidence requirements.
 - **Penetration Testing:** Customer responsibility. The platform follows OWASP LLM Top 10 patterns (see mapping above) and provides defense-in-depth controls for prompt injection, output handling, and data residency.
-- **BAA Execution:** Customer responsibility with their Azure OpenAI tenant. The platform is designed for Azure OpenAI Service, which offers BAA-eligible endpoints for HIPAA-regulated workloads.
+- **Compliance Agreements:** Customer responsibility. The operator executes compliance agreements (e.g., BAA) directly with their cloud provider. IntelliFlow OS is a software platform, not a compliance counterparty.
 - **Network Security:** Customer responsibility. The platform supports VPC deployment with private endpoints for both LLM inference (Azure OpenAI) and vector storage (Pinecone).
 - **Data Classification:** Customer responsibility. The platform demonstrates PHI-aware separation patterns (local FAISS for PHI, cloud Pinecone for public guidelines) that customers extend to their data governance policies.
 

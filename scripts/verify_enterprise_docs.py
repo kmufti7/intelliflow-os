@@ -228,8 +228,8 @@ for fpath in forbidden_files:
                     f'found "{phrase}"',
                 )
                 forbidden_violations += 1
-        # Check "demo" as noun
-        if DEMO_NOUN_PATTERN.search(line):
+        # Check "demo" as noun (skip PRD files — PRDs legitimately describe demo scenarios)
+        if not os.path.basename(fpath).startswith("PRD_") and DEMO_NOUN_PATTERN.search(line):
             check(
                 f'{rel}:{line_num} no "demo" as noun',
                 False,
@@ -566,6 +566,23 @@ for filename, keyword_groups in OFAC_COVERAGE.items():
             check(f'{filename} contains "OFAC" or "sanctions"', found)
 
 
+# --- Semantic coverage: DLM ADR ---
+DLM_COVERAGE = {
+    "docs/enterprise/ADR_DATA_LIFECYCLE_MANAGEMENT.md": [
+        "accepted", "deploying institution", "WORM",
+    ],
+}
+
+for filename, keywords in DLM_COVERAGE.items():
+    content = read_file(filename)
+    if content is None:
+        for kw in keywords:
+            check(f'{filename} contains "{kw}"', False, "file not found")
+    else:
+        for kw in keywords:
+            check_contains(filename, content, kw)
+
+
 # --- Semantic coverage: Kill-Switch in governance/observability ---
 KILLSWITCH_GOVERNANCE_COVERAGE = {
     "GOVERNANCE.md": [("KillSwitch", "Kill-Switch")],
@@ -581,6 +598,28 @@ for filename, keyword_groups in KILLSWITCH_GOVERNANCE_COVERAGE.items():
         for group in keyword_groups:
             found = any(kw in content for kw in group)
             check(f'{filename} contains "KillSwitch" or "Kill-Switch"', found)
+
+
+# --- Semantic coverage: PRDs (8 documents, 3 keywords each) ---
+PRD_COVERAGE = {
+    "docs/enterprise/PRD_SUPPORTFLOW.md": ["deterministic", "policy", "citation"],
+    "docs/enterprise/PRD_CAREFLOW.md": ["FHIR", "FAISS", "PHI"],
+    "docs/enterprise/PRD_CLAIMSFLOW.md": ["OFAC", "LangGraph", "fraud"],
+    "docs/enterprise/PRD_SPOG.md": ["Streamlit", "governance", "non-technical"],
+    "docs/enterprise/PRD_INTELLIFLOW_CORE_V2.md": ["WORM", "kill-switch", "LangGraph"],
+    "docs/enterprise/PRD_HITL_MAKER_CHECKER.md": ["Planned", "checkpointer", "Maker-Checker"],
+    "docs/enterprise/PRD_CONTINUOUS_EVALS.md": ["Planned", "golden dataset", "drift"],
+    "docs/enterprise/PRD_EDGE_SLM_ROUTING.md": ["Planned", "SLM", "deterministic"],
+}
+
+for filename, keywords in PRD_COVERAGE.items():
+    content = read_file(filename)
+    if content is None:
+        for kw in keywords:
+            check(f'{filename} contains "{kw}"', False, "file not found")
+    else:
+        for kw in keywords:
+            check_contains(filename, content, kw)
 
 
 # --- Report ---

@@ -6,12 +6,12 @@ This document explains the technology choices made for IntelliFlow OS and the ra
 
 | Option | Chosen | Rationale |
 |--------|--------|-----------|
-| Azure OpenAI Service | Yes | Enterprise compliance (BAA available for HIPAA), data residency controls, same models as OpenAI |
-| OpenAI Direct API | No | BAA-eligible, but requires onboarding a separate sub-processor — no VNet, Entra ID, Key Vault, or MACC integration |
+| Azure OpenAI Service | Yes | Sovereign perimeter integration (Entra ID, Key Vault, VNet, MACC) — deploys within existing enterprise cloud estate |
+| OpenAI Direct API | No | Requires onboarding a net-new Tier-1 data sub-processor — 6-12 months TPRM review, no VNet, Entra ID, Key Vault, or MACC integration |
 | Anthropic Claude | No | Strong alternative, but Azure relationship already established |
 | Open Source (Llama, Mistral) | No | Self-hosting complexity, less suitable for production-grade reference architecture |
 
-While foundational model providers (including direct OpenAI Enterprise) now offer BAA eligibility, Zero Data Retention (ZDR), and PrivateLink configurations, satisfying baseline compliance is only the first step in enterprise AI deployment.
+While foundational model providers (including direct OpenAI Enterprise) now satisfy baseline compliance requirements (Zero Data Retention, PrivateLink configurations), baseline compliance is only the first step in enterprise AI deployment.
 
 IntelliFlow OS explicitly standardizes on Azure OpenAI Service to ensure deployments remain entirely within the organization's existing sovereign cloud perimeter. By leveraging Azure, IntelliFlow OS natively inherits the enterprise's pre-approved Virtual Networks (VNets), Microsoft Entra ID Role-Based Access Control (RBAC), Azure Key Vault Customer-Managed Keys (CMK), and existing Microsoft cloud billing commitments (MACC).
 
@@ -102,7 +102,7 @@ This architectural standard eliminates the immense InfoSec, Legal, and Procureme
 
 | Decision | Choice | Key Reason |
 |----------|--------|------------|
-| LLM Provider | Azure OpenAI | Enterprise compliance (BAA) |
+| LLM Provider | Azure OpenAI | Sovereign perimeter integration |
 | Vector DB (PHI) | FAISS | Local-only, no network transmission |
 | Vector DB (Public) | Pinecone | Managed, scalable |
 | Database | SQLite | Simplicity for reference implementation scope |
@@ -110,3 +110,5 @@ This architectural standard eliminates the immense InfoSec, Legal, and Procureme
 | Embeddings | text-embedding-3-small | Good quality, low cost |
 | UI | Streamlit | Rapid prototyping |
 | CI/CD | GitHub Actions | Industry standard |
+
+**Architectural generation note:** All vendor choices above apply to both v1 (deterministic — SupportFlow, CareFlow) and v2 (agentic — ClaimsFlow) modules. v2 adds LangGraph as a runtime orchestration dependency but does not change the inference provider, vector database, or governance SDK decisions. See [ADR: Deterministic v1 vs. Agentic v2](docs/enterprise/ADR_DETERMINISTIC_V1_VS_AGENTIC_V2.md) for the applicability matrix governing when each architectural generation is appropriate.

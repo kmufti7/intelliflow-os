@@ -1,7 +1,7 @@
 # IntelliFlow OS — Cost Model (Token Economics)
 
 This document explains the unit economics of IntelliFlow OS interactions.
-Values are illustrative scenarios based on Azure OpenAI gpt-4o-mini pricing at time of development.
+Values are illustrative scenarios based on Azure OpenAI gpt-4o-mini pricing at time of development (Feb 2026).
 
 ## What We Track
 
@@ -26,7 +26,7 @@ Values are illustrative scenarios based on Azure OpenAI gpt-4o-mini pricing at t
 | Pilot (10K) | 10,000 | $10-30 | Depends on retrieval payload size |
 | Scale (100K) | 100,000 | $100-300 | Volume discounts may apply |
 
-*Note: These are rough estimates. Actual costs depend on prompt engineering, retrieval chunk sizes, and Azure pricing at time of deployment.*
+*Note: These are rough estimates based on Azure OpenAI pricing as of Feb 2026. Actual costs depend on prompt engineering, retrieval chunk sizes, and provider pricing at time of deployment.*
 
 ## Cost Controls Implemented
 
@@ -91,6 +91,6 @@ The token_ledger table is append-only with no TTL. Production deployments requir
 DLM policy (e.g., 90-day archival to cold storage). This is a known roadmap item.
 
 **Pricing configuration:**
-Default rates use Azure OpenAI pricing (gpt-4o, gpt-4o-mini, text-embedding-3-small).
+Default rates use Azure OpenAI pricing as of Feb 2026 (gpt-4o, gpt-4o-mini, text-embedding-3-small).
 Override via INTELLIFLOW_TOKEN_PRICING_JSON environment variable — same KMS-ready
 pattern as the WORM signing key.

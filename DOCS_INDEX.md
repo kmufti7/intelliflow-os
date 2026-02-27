@@ -32,8 +32,27 @@ This index is the fastest way to review enterprise readiness signals.
 | [RELEASE_NOTES_VERSIONING.md](docs/enterprise/RELEASE_NOTES_VERSIONING.md) | Versioning policy, release cadence, deprecation process, customer communication |
 | [PRODUCT_ROADMAP.md](docs/enterprise/PRODUCT_ROADMAP.md) | Product direction: current release, near-term priorities, strategic vision, guiding principles |
 | [ADR_MANAGED_INFERENCE_VS_SELF_HOSTED.md](docs/enterprise/ADR_MANAGED_INFERENCE_VS_SELF_HOSTED.md) | Architecture decision record: managed inference (Azure OpenAI, AWS Bedrock) vs. self-hosted (vLLM, Triton), tradeoff analysis, FinOps implications |
-| [ADR_DETERMINISTIC_V1_VS_AGENTIC_V2.md](docs/enterprise/ADR_DETERMINISTIC_V1_VS_AGENTIC_V2.md) | Architecture decision record: deterministic v1 vs. agentic v2, regulatory defensibility, kill-switch mandate, SR 11-7 alignment |
-| [SR_11_7_MODEL_RISK_MANAGEMENT.md](docs/enterprise/SR_11_7_MODEL_RISK_MANAGEMENT.md) | SR 11-7 model risk management alignment: requirement mapping, module-specific controls, kill-switch mandate, deploying institution responsibilities |
+| [ADR_DETERMINISTIC_V1_VS_AGENTIC_V2.md](docs/enterprise/ADR_DETERMINISTIC_V1_VS_AGENTIC_V2.md) | Architecture decision record: deterministic v1 vs. agentic v2, regulatory defensibility, kill-switch principle, SR 11-7 alignment |
+| [SR_11_7_MODEL_RISK_MANAGEMENT.md](docs/enterprise/SR_11_7_MODEL_RISK_MANAGEMENT.md) | SR 11-7 model risk management alignment: requirement mapping, module-specific controls, kill-switch principle, deploying institution responsibilities |
+| [ADR_DATA_LIFECYCLE_MANAGEMENT.md](docs/enterprise/ADR_DATA_LIFECYCLE_MANAGEMENT.md) | Architecture decision record: data lifecycle management — accepted gap, deploying institution owns retention and archival, DLM-ready hooks (WORM, FinOps ledger) |
+
+## Product Requirement Documents (PRDs)
+
+### Retrospective (Launched)
+| Document | Purpose |
+|----------|---------|
+| [PRD_SUPPORTFLOW.md](docs/enterprise/PRD_SUPPORTFLOW.md) | PRD for SupportFlow banking module |
+| [PRD_CAREFLOW.md](docs/enterprise/PRD_CAREFLOW.md) | PRD for CareFlow healthcare module |
+| [PRD_CLAIMSFLOW.md](docs/enterprise/PRD_CLAIMSFLOW.md) | PRD for ClaimsFlow insurance module |
+| [PRD_SPOG.md](docs/enterprise/PRD_SPOG.md) | PRD for Executive SPOG dashboard |
+| [PRD_INTELLIFLOW_CORE_V2.md](docs/enterprise/PRD_INTELLIFLOW_CORE_V2.md) | PRD for intelliflow-core v2 Governed Agentic Runtime |
+
+### Forward-Looking (Planned)
+| Document | Purpose |
+|----------|---------|
+| [PRD_HITL_MAKER_CHECKER.md](docs/enterprise/PRD_HITL_MAKER_CHECKER.md) | PRD for v3.0 HITL Maker-Checker capability |
+| [PRD_CONTINUOUS_EVALS.md](docs/enterprise/PRD_CONTINUOUS_EVALS.md) | PRD for v3.0 Continuous Evaluation Harness |
+| [PRD_EDGE_SLM_ROUTING.md](docs/enterprise/PRD_EDGE_SLM_ROUTING.md) | PRD for v3.0 Edge SLM Routing capability |
 
 ## Strategy Documents
 | Document | Purpose |

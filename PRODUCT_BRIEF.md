@@ -48,7 +48,7 @@ IntelliFlow OS is a governed agent runtime where **LLMs extract and explain, but
 - **Chaos Engineering:** Built-in failure injection to prove graceful degradation before production.
 - **Kill-Switch Governance (v2):** KillSwitchGuard — a deterministic circuit-breaker that halts LLM workflow execution when governance rules fail. Not a soft warning; a hard stop with a structured audit payload listing every failed rule. Fail-closed: the system blocks on any rule evaluation error rather than silently continuing.
 - **Tamper-Evident Audit Trail (v2):** WORMLogRepository — an HMAC-SHA256 hash-chained, append-only audit log that cannot be rewritten even by a DBA without the cryptographic key. Every governance event is permanently recorded with SQLite-enforced Write-Once immutability. If the log write fails, the workflow halts — no unlogged AI decision can proceed.
-- **Enterprise Evidence Pack:** 18 docs mapped to NIST AI RMF, OWASP LLM Top 10, EU AI Act record-keeping, SR 11-7 model risk management.
+- **Enterprise Evidence Pack:** 27 docs (19 original + 8 PRDs) mapped to NIST AI RMF, OWASP LLM Top 10, EU AI Act record-keeping, SR 11-7 model risk management.
 
 ---
 
@@ -82,9 +82,9 @@ Enterprise AI platforms fail when only the original builder can operate them. Th
 
 ## Deployment
 
-- **Designed for Azure OpenAI Service** (BAA-eligible for HIPAA-aligned deployments)
+- **Designed for deployment within existing sovereign Azure/AWS perimeters** — inherits Entra ID RBAC, Key Vault CMK, VNet routing, and MACC billing
 - **Compliance posture:** HIPAA-aligned design patterns, NIST AI RMF mapped, OWASP LLM Top 10 mapped
-- **Customer responsibility:** SOC 2 certification, penetration testing, BAA execution with Azure tenant
+- **Customer responsibility:** SOC 2 certification, penetration testing, compliance agreements with cloud provider
 - **Architecture:** Shared SDK (intelliflow-core) with pip-installable governance components
 
 ---
