@@ -81,7 +81,6 @@ These facts are verified. Do NOT contradict them in any output.
 | "253 total tests" | "276 total ecosystem tests (253 platform-core + 23 ClaimsFlow)" |
 | "intelliflow-core/tools/" | "IntelliFlow_OS/tools/" (actual location of ai_test_generator.py) |
 
-
 ### Public Content Forbidden Phrases (README.md, repo description)
 
 | Forbidden | Use Instead |
@@ -244,6 +243,12 @@ If changes affect architecture, data flow, or module structure, flag that ARCHIT
 Do not modify diagrams without explicit content from user.
 
 ---
+
+## Verification
+Commands the `verify-after-edit` hook and `/verify-app` skill will run. Read-only, under 30s each. Full cascade checks still run via `python scripts/verify_cascade.py` on demand, not in this gate.
+- `python --version`
+- `python -m compileall -q scripts/`
+- `python -c "import os; assert os.path.exists('DOCS_INDEX.md'), 'DOCS_INDEX.md missing'"`
 
 ## Project Context
 

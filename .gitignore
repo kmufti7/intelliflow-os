@@ -17,6 +17,9 @@ hello.py
 nul
 pytest.ini
 
+# Generated master docs
+INTELLIFLOW_OS_COMPLETE_DOCS.md
+
 # Python bytecode
 __pycache__/
 tests/__pycache__/
